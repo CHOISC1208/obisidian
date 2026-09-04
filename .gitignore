@@ -1,0 +1,20 @@
+# ワークスペースの状態（開いてるタブ、ウィンドウ位置など個人環境依存）
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# キャッシュ・一時ファイル
+.obsidian/cache
+.obsidian/.cache
+
+# ゴミ箱（Obsidian内で削除したファイルの退避先）
+.trash/
+
+# OS関連のゴミファイル
+.DS_Store
+Thumbs.db
+
+# エディタ関連（VSCodeなどで開く場合）
+.vscode/
+
+# プラグインの個別設定（APIキーなどが入る可能性があるため）
+.obsidian/plugins/*/data.json
