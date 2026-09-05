@@ -4,7 +4,7 @@ tags:
   - 緑茶園
 client: 緑茶園グループ
 created: 2026-08-29
-updated: 2026-09-04
+updated: 2026-09-05
 ---
 
 # 緑茶園グループ — MOC
@@ -53,6 +53,9 @@ updated: 2026-09-04
 ### 開発中のシステム
 - [[10 開発中システム - EC Channel Console]] — 断絶チャネルの受注取得を補うツール。楽天・Amazon・Yahoo・au PAY・Shopifyが実装済み
 - [[11 認証情報取得手順（EC Channel Console）]] — クライアント担当者への配布用ドキュメント
+
+### 要件定義ドラフト（次期開発候補）
+- [[13 要件定義ドラフト - Airtable入荷記録表フルスクラッチ再構築]] — 入荷記録表のAirtable・Relay・DocsAutomatorをVercel／Supabaseへ統合。価格計算ロジックは解明済み、ゲート判定🟡
 
 ### 先方課題4テーマ（次のフェーズ）
 - [[テーマ1 - 受注チャネル統合とツール複数人化]] — Amazon・Yahoo・au PAYのCSV作業とShopifyの断絶を解消。試作ツールを複数人で使える形にする
