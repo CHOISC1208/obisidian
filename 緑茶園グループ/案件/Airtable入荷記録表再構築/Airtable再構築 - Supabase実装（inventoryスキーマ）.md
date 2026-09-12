@@ -8,7 +8,7 @@ tags:
   - 実装
 client: 緑茶園グループ
 created: 2026-09-12
-updated: 2026-09-12
+updated: 2026-09-13
 aliases:
   - inventoryスキーマ
   - Airtable再構築 Supabase実装
@@ -31,7 +31,8 @@ aliases:
 | リポジトリ | `04_ryokuuchaen/ryokuchaen-inventory` |
 | Supabaseプロジェクト | `ryokuchaen`（ref `tphdmbhufxcpdifxxvzl`、東京リージョン、PostgreSQL 17） |
 | スキーマ | `inventory`。`public` は [[EC Channel Console - 00 概要\|EC Channel Console]] が使用中のため分離 |
-| 抽出スクリプト | `npm run extract:airtable`（読み取り専用・冪等） |
+| 抽出スクリプト | `npm run extract:airtable`（Airtableは読み取り専用・DB投入は1トランザクション・冪等） |
+| 投入状況 | **2026-09-13 に本番データ投入済み**（下記「投入結果」） |
 
 `public` に既にある7テーブル（`multi_channel_order_fetcher` 系・`order_backlog_lines` 等）は EC 側の資産なので触らない。
 
@@ -69,6 +70,71 @@ aliases:
 | `products.variant_no` | 規格9列が同一の商品が**7組**実在する。連番で区別し、`variant_no > 1` を統合候補として引けるようにした |
 | `inventory.migration_issues` テーブル | 抽出時の品質問題をSQLで追跡するため。`issue_type` は抽出レポートのセクション名と一致する |
 | `inventory.migration_issues_open` ビュー | 未解決の問題を重大度つきで俯瞰する |
+
+## 投入結果（2026-09-13）
+
+| テーブル | 件数 |
+|---|---|
+| transactions | 5,923 |
+| products | 2,894 |
+| product_prices | 487（全639件から空レコード等を除外） |
+| varieties | 99 |
+| payment_statements | 80 |
+| partners | 35 |
+| migration_issues | 328 |
+
+外部キーの欠損はゼロ。2回実行して件数も `id` の採番も変わらないことを確認済み。
+
+> [!success] 設計ドキュメントの検算値と一致した
+> 支払明細書 **8-10109**（阿部大介、2026-08-31）が
+> 税込 **51,071** ／ 消費税 **3,783** ／ 税抜 **47,288**。
+> 現行PDFと同じ値になり、`÷1.08` 直書きを置き換えた `v_statement_totals` ビューが
+> 期待どおり動くことが確認できた。
+
+### 投入時の自動補正
+
+いずれも `migration_issues.auto_fix` に理由が入る。
+
+| 補正 | 件数 |
+|---|---|
+| 規格9列が重複する商品に `variant_no` を付与 | 8行（7組） |
+| 仕入原価が空の取引に `0` を投入 | 13 |
+| 商品・期間・価格が完全に同一な原価履歴を1件に統合 | 1 |
+
+**仕入原価0は値だけでは判別できない。** 元から `unit_price = 0` の取引が1,032件あるため、
+補正した13件は `auto_fix is not null` で引く必要がある。
+
+### 投入できずスキップした行
+
+| 内容 | 件数 |
+|---|---|
+| 適用開始日が空の原価履歴 | 5 |
+| 適用終了日が開始日より前の原価履歴 | 1 |
+
+## 接続について
+
+パスワードに `@ % [ : &` が含まれており接続文字列として解釈できなかったため、
+スクリプトは `SUPABASE_DB_HOST` / `SUPABASE_DB_USER` / `SUPABASE_DB_PASSWORD` の
+**分割指定**に対応させた。記号のエンコードが要らない。
+
+- 接続先は **Session pooler**（`aws-0-ap-northeast-1.pooler.supabase.com:5432`）
+- 直接接続（`db.<ref>.supabase.co`）は**IPv6のみ**で、開発機から名前解決できなかった
+
+## Supabase Advisor の扱い
+
+`inventory` の17テーブルは **RLS有効・ポリシーなし**。Advisor は `rls_enabled_no_policy` を
+INFO で出すが、これは意図した状態で、`service_role` 以外からは1行も見えない。
+アプリに読ませる段階でポリシーを足す。
+
+`inventory` のビュー3本は `security_invoker = true` で作ってあるため Advisor に出ない。
+
+> [!warning] CRITICAL 5件は EC Channel Console 側の資産
+> `public.v_backlog_by_sku` / `v_backlog_by_date` / `v_backlog_by_jun` /
+> `v_backlog_overdue` / `v_manual_order_lines_current` の5ビューが SECURITY DEFINER。
+> **本案件の成果物ではない。**
+> `public` の7テーブルもRLS有効・ポリシーなしのため、ビューを単純に
+> `security_invoker` へ切り替えると、anonキーで読んでいる箇所があれば0行になって壊れる。
+> 直すならポリシーの設計とセットで、[[EC Channel Console - 00 概要]] 側の作業として扱う。
 
 ## データ品質チェック（2026-09-12 時点）
 
@@ -113,11 +179,16 @@ aliases:
 
 ## 次のアクション
 
+- [x] ~~スキーマ適用とデータ投入~~ → **2026-09-13 完了**。検算値も一致
 - [ ] 消費税10%の取引20件の扱いを決める（`tax_rate` の仮値0.08が誤りになる）
+- [ ] 仕入原価0で投入した13件の正しい単価を確認する
 - [ ] 原価履歴の複数商品リンク31件を商品ごとに展開するか決める
+- [ ] 投入できなかった原価履歴6件（開始日が空5件・期間逆転1件）をAirtable側で直す
 - [ ] 商品の規格重複7組をマスタ統合するか、`variant_no` のまま運用するか決める
 - [ ] 支払明細書PDF（80件）の Supabase Storage への移送
 - [ ] `marketplace_codes` に入れる外部モールコードの取得元を crossmall 側に確認
+- [ ] アプリから読ませる段階で `inventory` のRLSポリシーを設計する
+- [ ] （別案件）`public` の SECURITY DEFINER ビュー5本の是正 → [[EC Channel Console - 00 概要]]
 
 ## 関連ノート
 
