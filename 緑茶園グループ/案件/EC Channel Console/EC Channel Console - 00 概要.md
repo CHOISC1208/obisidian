@@ -8,7 +8,7 @@ client: 緑茶園グループ
 親論点: テーマ1 - 受注チャネル統合とツール複数人化
 フェーズ: 開発中
 created: 2026-09-04
-updated: 2026-09-09
+updated: 2026-09-12
 aliases:
   - EC Channel Console
 ---
@@ -20,7 +20,7 @@ aliases:
 > [!info] この案件ノートの位置づけ
 > [[テーマ1 - 受注チャネル統合とツール複数人化]] が扱う「断絶チャネルをどう解消するか」という論点に対する、**自社開発側の具体案**。テーマ1には他に「[[店舗アップ♪（外部ベンダー製品）]] を導入」「easyECSごと載せ替え」という選択肢があり、3案の比較表はテーマ1側にある。
 >
-> **収録ノート**：[[EC Channel Console - 認証情報取得手順]]（先方担当者への配布用）／[[EC Channel Console - 変換器構想とMDC出力]]（2026-09-08〜の拡張構想）
+> **収録ノート**：[[EC Channel Console - 認証情報取得手順]]（先方担当者への配布用）／[[EC Channel Console - 変換器構想とMDC出力]]（2026-09-08〜の拡張構想）／[[EC Channel Console - さくらVPS（ryokuchaen）]]（固定IP中継サーバの契約・ログイン）
 
 ## これは何か
 
@@ -104,6 +104,7 @@ aliases:
 > [!success] 🟢 2026-09-09 解決済み：本番デプロイでも実データ取得を確認
 > [[EC Channel Console - 変換器構想とMDC出力|easyECS SQL Server直結]] のために立てたVPS（さくらのVPS・東京・Tailscale導入済み）に、au PAY中継プロキシ（Caddy、シークレットヘッダー認証、Let's Encrypt自動HTTPS）を同居させる形で構築。**追加コストなしで両方の壁が解けた。**
 > 先方にVPSのIPをWow!managerへ登録してもらい、**実際に62件の受注データが画面に表示されるところまで確認済み**。実装詳細はリポジトリ側が正本 → `~/git/multi-channel-order-fetcher/docs/credentials.md`「中継プロキシ経由で使う場合」。
+> **サーバそのものの契約情報・ログイン方法・運用TODOは → [[EC Channel Console - さくらVPS（ryokuchaen）]]**
 >
 > 途中、`0002`（認証エラー）から抜け出せず時間を要した。原因は2つ重なっていた。
 > 1. IP登録の反映待ち（時間経過で解消）
