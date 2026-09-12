@@ -6,7 +6,7 @@ tags:
 client: 緑茶園グループ
 親論点: テーマ2 - グループウェアの役割再定義
 created: 2026-09-05
-updated: 2026-09-11
+updated: 2026-09-12
 aliases:
   - Airtable再構築案件
 ---
@@ -110,6 +110,7 @@ aliases:
 - [[Airtable再構築 - データモデル設計比較]] — 全23テーブルのAS-IS調査とTO-BE正規化スキーマ案（要件定義M2の詳細版）
 - [[Airtable再構築 - ヒアリング回答ログ]] — 質問トラッカーへの回答を原文で記録
 - [[Airtable再構築 - DBスキーマ定義]] — 全23テーブル640フィールドの棚卸しと、実装用のPostgres DDL
+- [[Airtable再構築 - Supabase実装（inventoryスキーマ）]] — 実装状況と、実データで判明した設計との差分10件
 
 ## 次のアクション
 

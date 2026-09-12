@@ -7,7 +7,7 @@ tags:
   - スキーマ定義
 client: 緑茶園グループ
 created: 2026-09-11
-updated: 2026-09-11
+updated: 2026-09-12
 aliases:
   - Airtable再構築 DDL
   - 入荷記録表 新DBスキーマ
@@ -17,6 +17,15 @@ aliases:
 # DBスキーマ定義：Airtable「入荷記録表」再構築（第1弾＝仕入側）
 
 親: [[Airtable再構築 - 00 概要|案件概要]] ／ 要件: [[Airtable再構築 - 要件定義ドラフト]] ／ AS-IS調査: [[Airtable再構築 - データモデル設計比較]]
+
+> [!warning] 2026-09-12：実装時に本書の制約6箇所が実データと食い違った
+> Airtable APIで全件を読んだ結果、本書のDDLのうち以下は**そのままでは張れない**ことが判明した。差分と根拠は [[Airtable再構築 - Supabase実装（inventoryスキーマ）]] に集約している。
+> - `transactions.quantity > 0` → 返品をマイナス計上する運用があり13件が違反
+> - `transactions.unit_price integer` → 小数が1件（194.4）
+> - 原価履歴の期間は閉区間 `[]` → 運用は「前の終了日＝次の開始日」なので半開区間 `[)` に変更
+> - `varieties` の `unique (species_id, name)` → りんご「紅玉」が2件
+> - `partners.status` に `negotiating` を追加（選択肢が実在）
+> - `partners.payment_day_type not null` → 未入力が7件
 
 ## この案件を1分で
 
