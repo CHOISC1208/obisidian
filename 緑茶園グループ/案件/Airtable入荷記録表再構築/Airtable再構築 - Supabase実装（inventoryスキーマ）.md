@@ -128,13 +128,19 @@ INFO で出すが、これは意図した状態で、`service_role` 以外から
 
 `inventory` のビュー3本は `security_invoker = true` で作ってあるため Advisor に出ない。
 
-> [!warning] CRITICAL 5件は EC Channel Console 側の資産
+> [!success] CRITICAL 5件は対応済み（2026-09-13）
 > `public.v_backlog_by_sku` / `v_backlog_by_date` / `v_backlog_by_jun` /
-> `v_backlog_overdue` / `v_manual_order_lines_current` の5ビューが SECURITY DEFINER。
-> **本案件の成果物ではない。**
-> `public` の7テーブルもRLS有効・ポリシーなしのため、ビューを単純に
-> `security_invoker` へ切り替えると、anonキーで読んでいる箇所があれば0行になって壊れる。
-> 直すならポリシーの設計とセットで、[[EC Channel Console - 00 概要]] 側の作業として扱う。
+> `v_backlog_overdue` / `v_manual_order_lines_current` の5ビューが SECURITY DEFINER だった。
+> **本案件の成果物ではなく [[EC Channel Console - 00 概要]] 側の資産**だが、あわせて是正した。
+>
+> これらを読むのは `lib/backlog/store.ts`・`lib/manual-orders/store.ts`・
+> `app/api/manual-orders/[destination]/sku-map/route.ts` の3ファイルだけで、いずれも
+> `getSupabaseAdmin()`（service_role）経由。service_role は RLS を無視するため
+> 実行権限モードに依存しない。anon キーのクライアントは認証専用で `.from()` を呼ばない。
+> よって `security_invoker = true` へ切り替えても動作は変わらず、実際に5本とも
+> 従来どおり行を返すことを確認した。
+>
+> マイグレーションは EC 側リポジトリの `supabase/migrations/0003_views_security_invoker.sql`。
 
 ## データ品質チェック（2026-09-12 時点）
 
@@ -188,7 +194,8 @@ INFO で出すが、これは意図した状態で、`service_role` 以外から
 - [ ] 支払明細書PDF（80件）の Supabase Storage への移送
 - [ ] `marketplace_codes` に入れる外部モールコードの取得元を crossmall 側に確認
 - [ ] アプリから読ませる段階で `inventory` のRLSポリシーを設計する
-- [ ] （別案件）`public` の SECURITY DEFINER ビュー5本の是正 → [[EC Channel Console - 00 概要]]
+- [x] ~~（別案件）`public` の SECURITY DEFINER ビュー5本の是正~~ → **2026-09-13 完了**（[[EC Channel Console - 00 概要]]）
+- [ ] 漏洩パスワード保護を有効にする（ダッシュボードの Authentication で切り替え）
 
 ## 関連ノート
 

@@ -184,6 +184,8 @@ aliases:
 > 「モックAPIでの検証」の5節を削除し、README へ寄せた（内容は失われていない）。
 
 ## 次のアクション
+- [x] ~~Supabase Advisor の CRITICAL（SECURITY DEFINER ビュー5本）~~ → **2026-09-13 是正済み**。`v_backlog_by_sku` / `v_backlog_by_date` / `v_backlog_by_jun` / `v_backlog_overdue` / `v_manual_order_lines_current` を `security_invoker = true` に変更（`supabase/migrations/0003_views_security_invoker.sql`）。読み取りは全て service_role 経由のため動作影響なし。ブランチ `fix/views-security-invoker` に未マージ
+- [ ] `public` の7テーブルはRLS有効・ポリシーなしのまま。ブラウザから anon キーで読ませる場合はポリシー設計が必要
 
 - [ ] 実アカウントでの5チャネルのレスポンス照合（**au PAYマーケットは2026-09-09完了**。残り4チャネル）
 - [ ] **LINEギフト出店者向けAPIの仕様書を入手する**（入手できれば実装は可能。認証情報の項目は確定済み）→ 上記「LINEギフトは実装できるか」
