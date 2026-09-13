@@ -1,3 +1,5 @@
 {
-  "cssTheme": "AnuPpuccin"
+  "cssTheme": "AnuPpuccin",
+  "baseFontSize": 13,
+  "translucency": true
 }
