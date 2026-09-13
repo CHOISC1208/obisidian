@@ -31,7 +31,10 @@ aliases:
 | リポジトリ | `04_ryokuuchaen/ryokuchaen-inventory` |
 | Supabaseプロジェクト | `ryokuchaen`（ref `tphdmbhufxcpdifxxvzl`、東京リージョン、PostgreSQL 17） |
 | スキーマ | `inventory`。`public` は [[EC Channel Console - 00 概要\|EC Channel Console]] が使用中のため分離 |
-| 抽出スクリプト | `npm run extract:airtable`（Airtableは読み取り専用・DB投入は1トランザクション・冪等） |
+| 抽出スクリプト | `npm run extract:airtable`（Airtableは読み取り専用・DB投入は1トランザクション・**実行のたびに全件を消して入れ直す**） |
+
+> [!info] 差分更新から全件入れ直しに変更（2026-09-13）
+> 当初は `airtable_record_id` を衝突キーにした upsert で差分更新していた。POCアプリ（[[Airtable再構築 - 画面設計（UI・UX）]]）で原価履歴の期間を区切ると、次の抽出でAirtableの値に戻って期間の重複制約に反し、抽出が失敗する。アプリと抽出がぶつからないよう、POC中はDBを常にAirtableと一致させる方針に変えた。アプリで入力したデータは抽出のたびに消える。
 | 投入状況 | **2026-09-13 に本番データ投入済み**（下記「投入結果」） |
 
 `public` に既にある7テーブル（`multi_channel_order_fetcher` 系・`order_backlog_lines` 等）は EC 側の資産なので触らない。
@@ -66,7 +69,7 @@ aliases:
 
 | 追加 | 理由 |
 |---|---|
-| 全テーブルの `airtable_record_id`（unique） | カットオーバーまでAirtableが更新され続けるため、これを衝突キーにした upsert で何度でも流し直す |
+| 全テーブルの `airtable_record_id`（unique） | 投入時にAirtableのリンクから外部キーを引き当てる。アプリで作った行は空になるので、Airtable由来かどうかの見分けにもなる（当初は差分更新の衝突キー。2026-09-13 に全件入れ直しへ変更） |
 | `products.variant_no` | 規格9列が同一の商品が**7組**実在する。連番で区別し、`variant_no > 1` を統合候補として引けるようにした |
 | `inventory.migration_issues` テーブル | 抽出時の品質問題をSQLで追跡するため。`issue_type` は抽出レポートのセクション名と一致する |
 | `inventory.migration_issues_open` ビュー | 未解決の問題を重大度つきで俯瞰する |
