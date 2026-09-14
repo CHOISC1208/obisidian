@@ -1,0 +1,85 @@
+---
+tags:
+  - 緑茶園
+  - 案件
+  - platform
+  - 統合調査
+client: 緑茶園グループ
+親論点:
+  - テーマ1 - 受注チャネル統合とツール複数人化
+  - テーマ2 - グループウェアの役割再定義
+フェーズ: 調査
+created: 2026-09-14
+updated: 2026-09-14
+aliases:
+  - platform
+  - 統合コンソール
+  - ryokuchaen-platform
+---
+
+# platform：2リポジトリの統合コンソール化 — 事前調査
+
+親: [[00 MOC|緑茶園グループ MOC]] ／ 親論点: [[テーマ1 - 受注チャネル統合とツール複数人化]]・[[テーマ2 - グループウェアの役割再定義]]
+統合元: [[EC Channel Console - 00 概要|EC Channel Console]]（`multi-channel-order-fetcher`）／[[Airtable再構築 - 00 概要|Airtable再構築]]（`ryokuchaen-inventory`）
+
+> [!info] このフォルダの位置づけ
+> 2つのリポジトリを1つの統合コンソールにまとめる計画の**着手前調査**。コードは書いていない。
+> 2026-09-14 時点のスナップショットであり、両リポジトリの README（システム仕様の正本）を置き換えるものではない。ここに書くのは「**統合するときに何がぶつかるか**」だけ。
+
+## 調査対象（2026-09-14 時点）
+
+| | ryokuchaen-inventory | multi-channel-order-fetcher |
+|---|---|---|
+| 中身 | 生産者仕入業務の POC アプリ＋Airtable 抽出スクリプト | EC Channel Console（受注取得・手動受注取り込み・受注残ボード） |
+| GitHub | `ryokuchaen/ryokuchaen-inventory` | `ryokuchaen/multi-channel-order-fetcher` |
+| 調べたコミット | `f77a3b5`（main） | `c464bba`（**`fix/views-security-invoker` ブランチ**。main ではない） |
+| package.json | `ryokuchaen-inventory` 0.1.0 | `ec-channel-console` 0.10.2 |
+
+統合先と思われる **`ryokuchaen/ryokuchaen-platform`** リポジトリがすでに作られている（`04_ryokuuchaen/ryokuchaen-platform`）。中身は Initial commit のみで、README の1行（「緑茶園の総合プラットフォーム」）・Node 用 `.gitignore`・空の `.env.local` だけ。
+
+## 結論（先に要点）
+
+> [!success] 土台はすでに統合済みに近い
+> - **Supabase プロジェクトは同一**（`ryokuchaen` / ref `tphdmbhufxcpdifxxvzl`）。スキーマで住み分けている（EC＝`public`、仕入＝`inventory`）。→ [[platform - 02 Supabase・認証・環境変数]]
+> - **ログインユーザーも同一**（Supabase Auth のメール＋パスワード、現在3名）。inventory のログイン画面は「EC Channel Console と同じアカウントでログインできます」と明示している
+> - **スタックはほぼ同じ**：Next.js 16.3.x／React 19.2.8／Tailwind CSS 4.3.3／`@supabase/ssr` 0.12.x。**shadcn/ui はどちらも未導入**（差分ゼロ）。→ [[platform - 01 スタックと構成の比較]]
+> - `globals.css`・`proxy.ts`・`lib/auth/*`・ログイン画面・`PageHeader` は**ほぼ同じコード**。同じ雛形から作られている
+
+> [!warning] 本当の障害は「見た目」ではなく次の5つ
+> 1. **仕入アプリ自体の行き先が未決。** [[Airtable再構築 - 00 概要]] で kintone 案が再オープン中。kintone に転べば統合の対象から外れる
+> 2. **データアクセス層が2系統。** inventory は `pg` 直結＋Server Actions、EC は `supabase-js`（service_role）＋Route Handlers。`inventory` スキーマは PostgREST から見えないので、EC の書き方には寄せられない
+> 3. **マイグレーション履歴がリポジトリと食い違っている。** 本番の履歴は4件、リポジトリのファイルは合計4本だが対応していない。EC の2本は SQL Editor で手動適用、認証情報テーブルの DDL はどこにも無い
+> 4. **権限モデルが無い。** ログインできれば誰でも全機能を使える。統合すると「受注を見る人」が「支払明細書を発行する人」「モールの API キーを書き換える人」と同じ権限になる
+> 5. **商品コードが見かけ上ぶつかる。** easyECS の SKU に `0014-103` などがあり、inventory の `product_code` と**文字列が完全一致するのに別商品**（ラフランス 2kg と ぶどう 500g）。→ [[platform - 03 概念が重なるテーブルと型]]
+>
+> 詳細と重大度は → [[platform - 04 移植の障害と設計判断]]
+
+## ノート一覧
+
+| ノート | 内容 |
+|---|---|
+| [[platform - 01 スタックと構成の比較]] | README要約・アーキテクチャ・依存パッケージのバージョン差・スクリプトとテスト |
+| [[platform - 02 Supabase・認証・環境変数]] | プロジェクト同一性の根拠・スキーマ・マイグレーション履歴・環境変数・Supabase Auth の使い方の違い |
+| [[platform - 03 概念が重なるテーブルと型]] | 商品/SKU・取引先/ストア・取込バッチ・監査ログ・TS型の対応表 |
+| [[platform - 04 移植の障害と設計判断]] | 命名規則・ルーティング・レイアウト・データライフサイクル・権限・デプロイの障害を重大度つきで整理 |
+| [[platform - 05 統合方針（決定事項と設計）]] | **2026-09-14 の決定事項**と、スキーマ・`sql/`・データアクセス・権限・画面構成の設計方針、EC のスキーマ移動の手順 |
+| [[platform - 06 デザイン指示書]] | 統合コンソールのデザイン指示書（**v2・正本**。07 の指摘を反映）。カラートークンとコントラスト、タイポグラフィ、モジュールと画面の割り当て、Tailwind v4 形式の CSS 変数、避けるべきパターン |
+| [[platform - 07 デザイン指示書レビュー]] | 指示書の検算（HSL と HEX のずれ、Tailwind v4 での書き方）、コントラスト検証、05 とのレイアウトの突き合わせ、既存コードとの差 |
+
+## 着手前に決めること
+
+> [!success] 2026-09-14：主要な論点に方針が出た → [[platform - 05 統合方針（決定事項と設計）]]
+> 仕入は自前前提／データアクセスは1系統に統一／新規のマイグレーションは共通ルール／SQL は `sql/` に整理／権限はロール＋個人で superuser が設定／統合先は `ryokuchaen-platform`／EC は `public` から新スキーマへ移し、`public` は原則使わない。
+
+- [x] ~~**仕入業務は kintone に行くのか、自前に残るのか**~~ → **自前前提で作る**（2026-09-14）。[[Airtable再構築 - 00 概要]] への反映は未
+- [x] ~~**統合後のデータアクセスをどちらに寄せるか**~~ → **統一する**。推奨は `pg` 直結＋Server Actions（→ 05 の3章）
+- [x] ~~**マイグレーションの正本をどこに置くか**~~ → **`sql/` ディレクトリ**。新規実装は必ず共通ルールに従う（→ 05 の2章）
+- [x] ~~**ロールをどう切るか**~~ → **ロール単位と個人単位で、superuser が設定画面で設定する。superuser は Supabase で直接設定**（→ 05 の4章。ロールの初期セットは未決）
+- [ ] **商品の対応づけをどう持つか**。仕入商品（取引先×規格）と販売SKU（セット・箱単位）は 1:1 にならない
+- [ ] [[テーマ2 - グループウェアの役割再定義]] の GUIファースト方針との整合。統合コンソールは保守の SPOF をさらに1か所に集める
+
+## 調査方法
+
+- 両リポジトリの README・CLAUDE.md・package.json・`node_modules` 内の実バージョン・`app/`・`lib/`・`components/`・`supabase/migrations/` を読んだ
+- Supabase は MCP で**読み取りのみ**実行（プロジェクト一覧・テーブル一覧・マイグレーション履歴・RLS/ビュー設定・`auth.users` の件数・コード体系の突き合わせ）。書き込みはしていない
+- `.env.local` は変数名と URL だけを見た。キーやパスワードの値はこのノートに書いていない
