@@ -1,5 +1,6 @@
 {
-  "cssTheme": "AnuPpuccin",
+  "cssTheme": "Cinderpaper",
   "baseFontSize": 13,
-  "translucency": true
+  "translucency": false,
+  "theme": "moonstone"
 }
