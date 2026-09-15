@@ -19,3 +19,4 @@ updated: 2026-09-15
 | ノート | 内容 |
 |---|---|
 | [[Vercel - デプロイブランチの制御]] | Production Branch・Ignored Build Step の設定 |
+| [[Vercel - Functionsのリージョン設定]] | Functionsの既定リージョン（米国）とDBのリージョンが離れていると起きる遅延、`vercel.json` での直し方 |
