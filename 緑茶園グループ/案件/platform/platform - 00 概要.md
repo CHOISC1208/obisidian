@@ -83,6 +83,22 @@ aliases:
 > - EC のオブジェクトは 2026-09-14 に `public` から `multi_channel_order_fetcher` スキーマへ移されていた（意図どおりと確認）。旧 EC Channel Console は動かない前提
 > - ユーザーの作成には Auth 管理 API の secret key が要る → テーブルの読み書きには使わず、ユーザー作成だけに1本持つと決めた
 
+> [!info] 2026-09-15：段階3（inventory の移植）を実装
+> `stage3/inventory` ブランチ。仕入アプリ（`../ryokuchaen-inventory`）の画面・Server Action・抽出スクリプトを、新しい URL（`/logistics`・`/documents`・`/masters`）と権限（`requirePermission()`）・`ActionResult` に載せ替えた。
+> - `inventory` スキーマと `platform_app` への grant は段階2のベースラインで既に揃っていたため、**新しい migration は不要**（アプリコードの移植のみ）
+> - 監査ログは決定どおりカットオーバーまで `inventory.audit_logs` に残したまま（`core.audit_logs` には未統合）
+> - 自前部品を指示書どおり shadcn/ui に置き換えた（`SidePeek` → `Sheet`、`PartnerCombobox` → `Command`＋`Popover`）
+> - 抽出スクリプトの DB 接続ユーザーを決定（→ 05 の「未決・要確認」）。本番での抽出実行はまだ行っていない
+
+> [!info] 2026-09-15：段階4（EC の移植）をコードとして実装（画面は未確認）
+> `stage4/ec` ブランチ。`multi-channel-order-fetcher` の7チャネル（楽天・Amazon・Yahoo・au PAY・Shopify・Temu・LINEギフト）・受注残ボード（手動表示）・手動受注取り込み（MDC／その他）・SKU対応表・チャネル認証情報画面を、`supabase-js`（service_role）から `pg` 直結＋`lib/ec/` へ移植した。
+> - 段階4は CLAUDE.md の定義どおり「コードのみ」。`ec` スキーマが無いため実行・検証はできない。`npm run build`・`typecheck`・`lint` は通した。パース純関数（受注残・手動受注取込）は `npm run test:backlog`・`test:manual-orders` で検証済み（DB不要のため今すぐ実行できる）
+> - `ChannelError` クラスは廃止し、`lib/core/result.ts` の `AppError`／`ActionResult` に統一した（05 の3章どおり）
+> - Route Handler はファイルの入出力（CSV取り込み・CSVエクスポート）だけに絞り、チャネル別の受注取得・認証情報の保存・SKU対応の登録は Server Action にした（移植元は全て Route Handler だった）
+> - 受注残ボード（連携表示）・MDC出力は移植元と同じくスタブのまま（easyECS SQL Server 接続情報の受領待ち）
+> - EC検証用ボット（`test-bot@...`）への権限割り当ては `sql/ops/assign_test_bot_role.sql` にドラフトのみ用意し、適用は段階5に送った（未決事項の決着 → 05 の「未決・要確認」）
+> - 移植元の `test:mock`（HTTPでの通し検証）は、多くの操作が Route Handler から Server Action に変わったためそのまま移植できない。詳細と段階5での作り直し方針は `ryokuchaen-platform` の `test/README.md`
+
 - [ ] **商品の対応づけをどう持つか**。仕入商品（取引先×規格）と販売SKU（セット・箱単位）は 1:1 にならない
 - [ ] [[テーマ2 - グループウェアの役割再定義]] の GUIファースト方針との整合。統合コンソールは保守の SPOF をさらに1か所に集める
 

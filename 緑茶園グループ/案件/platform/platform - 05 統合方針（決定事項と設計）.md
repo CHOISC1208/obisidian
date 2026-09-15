@@ -422,7 +422,9 @@ au PAY の中継プロキシの URL と共有シークレットは認証情報�
 - [x] ~~`core` スキーマとアプリ専用DBロールの設計~~ → **確定**（2026-09-15 ちぇる）。`platform_app` は bypassrls＋grant、ユーザー一覧は security definer の関数（3章・4章）
 - [x] ~~初期ロールのセットと、既存3名への割り当て。既定が拒否なので、切り替え直後に全員が締め出されないよう seed で用意する~~ → **4ロール（受注担当・仕入担当・月締め・マスタ管理）。`info@yamagata-elab.com` には4ロールすべて**（2026-09-15 ちぇる。4章の「初期ロール」）
   - superuser は **`nieve.n.cook1208@gmail.com`** に決定（2026-09-14 ちぇる）。付与は `sql/ops/` の SQL で行う
-  - 「既存3名」のうち1件は EC の `test:mock` 用ボット（`test-bot@multi-channel-order-fetcher.local`）で、人は2名だった。ボットの割り当ては段階4で決める
+  - 「既存3名」のうち1件は EC の `test:mock` 用ボット（`test-bot@multi-channel-order-fetcher.local`）で、人は2名だった。
+    → **段階4で決着**：「受注担当」ロール＋個人単位で `ec.credentials.edit` を許可。ただし `ec` スキーマが無く段階5まで検証自体を実行できないため、`sql/ops/assign_test_bot_role.sql` にドラフトだけ用意し、適用は段階5に送った（2026-09-15）
+- [x] ~~抽出スクリプト（scripts/extract-airtable）の DB 接続ユーザー~~ → **新しいロールは作らず `postgres`（superuser）のまま**（2026-09-15 ちぇる、段階3着手時）。ホスト・DB名はアプリ（`platform_app`）と共有し、接続ユーザーだけ別の環境変数（`AIRTABLE_EXTRACT_DB_USER`／`AIRTABLE_EXTRACT_DB_PASSWORD`）で分ける。ポートも既定は Session pooler（5432）のままアプリ（6543）と分けた
 - [ ] easyECS 受注CSVの実ファイルサイズ（Server Action の 1MB／Vercel の 4.5MB）
 - [x] ~~アプリ専用DBロールで pooler 経由の接続ができるか。Session pooler と Transaction pooler のどちらにするか~~ → **Transaction pooler（6543）で `platform_app` から接続できた**（2026-09-15 確認）
 - [ ] Supabase Auth の「新規サインアップを許可」がオフになっているか（MCP では読めない。ダッシュボードで確認）。あわせて Security Advisor が「Leaked password protection が無効」を WARN で出している（2026-09-15）
