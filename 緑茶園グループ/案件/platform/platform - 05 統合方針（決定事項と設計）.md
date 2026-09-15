@@ -428,5 +428,5 @@ au PAY の中継プロキシの URL と共有シークレットは認証情報�
 - [ ] easyECS 受注CSVの実ファイルサイズ（Server Action の 1MB／Vercel の 4.5MB）
 - [x] ~~アプリ専用DBロールで pooler 経由の接続ができるか。Session pooler と Transaction pooler のどちらにするか~~ → **Transaction pooler（6543）で `platform_app` から接続できた**（2026-09-15 確認）
 - [ ] Supabase Auth の「新規サインアップを許可」がオフになっているか（MCP では読めない。ダッシュボードで確認）。あわせて Security Advisor が「Leaked password protection が無効」を WARN で出している（2026-09-15）
-- [ ] 旧2リポジトリと、旧 EC Channel Console の Vercel プロジェクトをいつアーカイブするか
+- [x] ~~旧2リポジトリと、旧 EC Channel Console の Vercel プロジェクトをいつアーカイブするか~~ → **`multi-channel-order-fetcher`（リポジトリ・Vercelプロジェクトとも）は段階5の切り替え直後にアーカイブ・削除済み**（2026-09-15）。`ryokuchaen-inventory` リポジトリは段階3で移植済みだが、こちらはまだアーカイブしていない（判断が別途必要）
 - [ ] D1 を [[Airtable再構築 - 00 概要]] にどう反映するか

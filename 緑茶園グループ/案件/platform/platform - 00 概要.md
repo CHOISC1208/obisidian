@@ -99,6 +99,12 @@ aliases:
 > - EC検証用ボット（`test-bot@...`）への権限割り当ては `sql/ops/assign_test_bot_role.sql` にドラフトのみ用意し、適用は段階5に送った（未決事項の決着 → 05 の「未決・要確認」）
 > - 移植元の `test:mock`（HTTPでの通し検証）は、多くの操作が Route Handler から Server Action に変わったためそのまま移植できない。詳細と段階5での作り直し方針は `ryokuchaen-platform` の `test/README.md`
 
+> [!success] 2026-09-15：段階5（切り替え）完了。`ryokuchaen-platform` を本番デプロイ
+> `multi_channel_order_fetcher` → `ec` へのスキーマリネーム（`sql/migrations/20260915040000_ec_cutover.sql`）を適用し、移行前後の件数一致を確認。旧 EC Channel Console は Vercel プロジェクトごと削除・GitHubリポジトリもアーカイブ済み。`ryokuchaen-platform` はこれが初回デプロイ（[[platform - 05 統合方針（決定事項と設計）]]「未決・要確認」参照）。
+> - 動作確認で2件の不具合を発見・修正：① au PAY 中継プロキシ（さくらVPS `ryokuchaen`）で `ufw` が443番ポートを許可しておらずAPIに接続できなかった（`sudo ufw allow 443/tcp` で解消。VPS側の設定漏れで、アプリのコードとは無関係）。② EC の `timestamptz` 列（`imported_at` など）が `pg` 標準どおり `Date` オブジェクトのまま返り、Reactが「Objects are not valid as a React child」でクラッシュしていた（手動受注取り込み画面が「ページが無い」ように見えた原因）。`lib/core/queries.ts` は元々 `Date` を前提にしていたため気づかず、EC側の該当箇所で `.toISOString()` の文字列化を追加して解消
+> - デプロイ後、画面遷移が毎回1〜3秒遅いという報告 → Vercel Functions の既定リージョン（`iad1`・米国）と Supabase（東京）が離れていたことが原因と判明。`vercel.json` で `hnd1`（東京）に固定して解消（一般的な知見として [[common/Vercel - Functionsのリージョン設定]] にも記録）
+> - 残作業：`ec._archived_multi_channel_order_fetcher_logs`（旧エラーログの控え）は運用が安定してから drop する。EC検証用ボットの権限適用は `test:mock` 相当の検証を作り直すときに判断する
+
 - [ ] **商品の対応づけをどう持つか**。仕入商品（取引先×規格）と販売SKU（セット・箱単位）は 1:1 にならない
 - [ ] [[テーマ2 - グループウェアの役割再定義]] の GUIファースト方針との整合。統合コンソールは保守の SPOF をさらに1か所に集める
 
