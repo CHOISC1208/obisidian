@@ -11,7 +11,7 @@ updated: 2026-09-15
 
 # Vercel：FunctionsのリージョンをDBに合わせる
 
-親: [[common/00 MOC|common]]
+親: [[common/01_engineering/00 MOC|common/01_engineering]]
 
 クライアントを問わず使う一般的な設定。特定の案件に紐づく内容ではない。
 
