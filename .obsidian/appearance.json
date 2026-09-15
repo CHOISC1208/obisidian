@@ -1,6 +1,7 @@
 {
-  "cssTheme": "Catppuccin",
+  "cssTheme": "Atom",
   "baseFontSize": 13,
   "translucency": false,
-  "theme": "moonstone"
+  "theme": "moonstone",
+  "accentColor": "#98aec8"
 }
