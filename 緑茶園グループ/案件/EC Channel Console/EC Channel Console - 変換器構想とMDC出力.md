@@ -47,18 +47,29 @@ aliases:
 > - Amazon/Yahoo/au PAYは受注取得のAPI実装がすでに完了している（[[EC Channel Console - 00 概要#棚卸課題との対応|棚卸課題との対応]]）。PowerAutomateを置き換える土台はある。ただしMDCはサポート対象外・税率5%固定などのリスクを持つ経路なので、**既に正規のCSV取込ルートが機能している3チャネルをわざわざMDC経由に寄せる理由がない**。各モール純正フォーマットでの出力に留める
 >
 > **④ 見直し後の全体像（案）**
-> ```
-> [チャネル]                          [変換]                                    [出口]
+> ```mermaid
+> flowchart LR
+>     subgraph CH["各チャネル"]
+>         RAK["楽天<br/>API連携済み"]
+>         AYA["Amazon / Yahoo / au PAY<br/>API取得 実装済み"]
+>         SHP["Shopify<br/>API実装済み"]
+>         TML["Temu / LINEギフト<br/>API未実装・順次"]
+>         FTK["ふるさと納税 / 電話・カタログ<br/>手動"]
+>     end
 >
-> 楽天                         ──────────────────────────→ easyECS（現状維持・API連携済み）
+>     RAK --> ECS1[("easyECS<br/>現状維持")]
 >
-> Amazon / Yahoo / au PAY  →  API取得(実装済)
->                          →  純正フォーマットCSV出力(新規・PowerAutomate置換) → easyECS（純正CSV取込・変更なし）
+>     AYA --> NCSV["純正フォーマットCSV出力<br/>新規・PowerAutomate置換"]
+>     NCSV --> ECS2[("easyECS<br/>純正CSV取込・変更なし")]
 >
-> Shopify(API実装済)
-> Temu / LINEギフト(API未実装、順次)   ┐
-> ふるさと納税 / 電話・カタログ(手動)  ┼→ 正規化データ ┬→ MDC CSV出力(段階導入・出力時にチャネル/期間で絞込) → easyECS
->            └ 手動受注取込(統一フォーマット)┘            └→ 受注残ボード（可視化）
+>     SHP --> NORM["正規化データ"]
+>     TML --> NORM
+>     FTK --> MAN["手動受注取込<br/>統一フォーマット"]
+>     MAN --> NORM
+>
+>     NORM --> MDC["MDC CSV出力<br/>段階導入・チャネル/期間で絞込"]
+>     MDC --> ECS3[("easyECS")]
+>     NORM --> BLG["受注残ボード<br/>可視化"]
 > ```
 >
 > **⑤ 未確定のまま残る前提**
