@@ -14,34 +14,45 @@ updated: 2026-09-15
 
 クライアントを問わず使う一般的な設定。特定の案件に紐づく内容ではない。
 
-## 2つの設定は役割が違う
+> [!warning] 2026-09-15 訂正
+> 当初「Ignored Build Step にカスタムのbashスクリプトを書く」と案内したが誤り（古い情報）。
+> **今は Behavior のプリセットを選ぶだけで良い。** 下記に差し替え。
 
-| 設定 | 場所 | 効果 |
-|---|---|---|
-| Production Branch | Project Settings → Git → Production Branch | そのブランチへの push だけが**本番ドメイン**に反映される（既定は `main`）。他のブランチは本番に影響しないプレビューURLのまま |
-| Ignored Build Step | Project Settings → Git → Ignored Build Step | 条件を満たさないブランチは**ビルドそのものをスキップ**する。プレビューURLも作られなくなる |
+## 設定場所
 
-**「本番ドメインさえ守れればよい」なら Production Branch の設定だけで足りる。**
-**「作業ブランチのビルドも走らせたくない（ビルド時間・コストの節約）」なら Ignored Build Step も設定する。**
+**Settings → Build and Deployment → Ignored Build Step**
 
-## Ignored Build Step の設定例
+Behavior のドロップダウンから選ぶ（2026-09-15 時点の選択肢）：
 
-`main` へのpushだけをビルドし、他のブランチは全てスキップする。
+| 選択肢 | 内容 |
+|---|---|
+| Automatic | Vercel の既定挙動（同じSHAへのコミットはスキップ、など） |
+| **Only build production** | **Production Branch（既定 `main`）以外は一切ビルドしない。プレビューデプロイも作られない** |
+| Only build pre-production | 逆に本番以外だけビルドする |
+| Only build if there are changes | 変更差分が無ければスキップ |
+| Only build if there are changes in a folder | monorepo 向け。特定フォルダに差分が無ければスキップ |
+| Don't build anything | 常にスキップ（一時的にデプロイを完全に止めたいとき） |
+| Run my Bash script / Run my Node script / Custom | 独自のスクリプトで判定したいとき（プリセットで足りないケース用） |
+
+**「mainだけデプロイしたい」は `Only build production` を選ぶだけで完了する。** カスタムスクリプトは不要。
+
+Production Branch 自体（既定でどのブランチを「本番」とみなすか）は、接続した Git リポジトリの
+デフォルトブランチが自動的に使われる（GitHub 側で `main` になっていればそのまま `main`）。
+
+## （参考）カスタムスクリプトが要る場合
+
+プリセットで表現できない条件（例：特定のパスの変更＋特定のブランチ、複数条件のAND/OR）のときは
+「Run my Bash script」を選び、以下のように `exit 1`（ビルドする）／`exit 0`（スキップする）で判定する。
 
 ```bash
 if [ "$VERCEL_GIT_COMMIT_REF" = "main" ]; then
   exit 1
 else
-  echo "main 以外なのでビルドをスキップします"
   exit 0
 fi
 ```
 
-- `exit 1` → ビルドを実行する（"ignored" ではない）
-- `exit 0` → ビルドをスキップする（"ignored"）
-
-`$VERCEL_GIT_COMMIT_REF` は Vercel がビルド時に自動で渡すブランチ名の環境変数。他の変数と組み合わせて
-「特定のディレクトリに差分が無ければスキップ」（monorepo）のような条件にも応用できる。
+`$VERCEL_GIT_COMMIT_REF` はビルド時に自動で渡されるブランチ名の環境変数。
 
 ## 出典・使った案件
 
