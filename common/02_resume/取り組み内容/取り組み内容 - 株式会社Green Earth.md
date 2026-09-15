@@ -9,7 +9,7 @@ updated: 2026-09-16
 
 # 取り組み内容 - 株式会社Green Earth
 
-親: [[取り組み内容]]（[[common/02_resume/00 MOC|common/02_resume]]）
+親: [[取り組み内容 - 00 概要|取り組み内容]]（[[common/02_resume/00 MOC|common/02_resume]]）
 参照元: [[GreenEarth/00-ダッシュボード|株式会社Green Earth（クライアントフォルダ）]]
 
 **期間**：2026-06〜現在（フリーランス・外部DXパートナー、本部所属扱い）
@@ -67,6 +67,6 @@ Next.js／Supabase／Vercel（`green-earth-platform`・`cheesepige-site`の開�
 
 ## 関連
 
-- [[取り組み内容]]
+- [[取り組み内容 - 00 概要|取り組み内容]]
 - [[職務経歴]]
 - [[GreenEarth/00-ダッシュボード|株式会社Green Earth（クライアントフォルダ）]]
