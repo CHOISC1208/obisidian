@@ -57,10 +57,10 @@ aliases:
 >         FTK["ふるさと納税 / 電話・カタログ<br/>手動"]
 >     end
 >
->     RAK --> ECS1[("easyECS<br/>現状維持")]
+>     RAK --> ECS[("easyECS")]
 >
 >     AYA --> NCSV["純正フォーマットCSV出力<br/>新規・PowerAutomate置換"]
->     NCSV --> ECS2[("easyECS<br/>純正CSV取込・変更なし")]
+>     NCSV --> ECS
 >
 >     SHP --> NORM["正規化データ"]
 >     TML --> NORM
@@ -68,7 +68,7 @@ aliases:
 >     MAN --> NORM
 >
 >     NORM --> MDC["MDC CSV出力<br/>段階導入・チャネル/期間で絞込"]
->     MDC --> ECS3[("easyECS")]
+>     MDC --> ECS
 >     NORM --> BLG["受注残ボード<br/>可視化"]
 > ```
 >
