@@ -8,7 +8,7 @@ tags:
   - 認証
 client: 緑茶園グループ
 created: 2026-09-14
-updated: 2026-09-14
+updated: 2026-09-15
 ---
 
 # Supabase・認証・環境変数
@@ -41,6 +41,9 @@ updated: 2026-09-14
 
 > [!success] 2026-09-14 決定：同じプロジェクトを使い続け、EC は `public` から新スキーマへ移す
 > `public` は原則使わない。移動先の名前・改名するテーブル・切り替え手順は → [[platform - 05 統合方針（決定事項と設計）]] の1章・6章
+
+> [!warning] 2026-09-15 判明：上の表の `public` の7テーブル・5ビューは、2026-09-14 22:31 JST に `multi_channel_order_fetcher` スキーマへ移されている
+> 履歴 `20260914133154 move_public_objects_to_multi_channel_order_fetcher_schema`（どのリポジトリにもファイルは無い）。件数は変わっていない。意図どおりの移動と確認済み → [[platform - 05 統合方針（決定事項と設計）]] の1章
 
 ## マイグレーション履歴がリポジトリと合っていない
 
@@ -99,7 +102,10 @@ updated: 2026-09-14
 
 ### 実ユーザー（2026-09-14）
 
-`auth.users` は **3名**。全員メール認証で、直近30日以内にログインしている。`app_metadata`・`user_metadata` に role を持つユーザーは**0名**。
+`auth.users` は **3名**。全員メール認証で、直近30日以内にログインしている。
+
+> [!warning] 2026-09-15 確認：3件のうち1件は人ではない
+> `test-bot@multi-channel-order-fetcher.local` は EC の `test:mock` 用のアカウント。人は superuser と `info@yamagata-elab.com` の2名。`app_metadata`・`user_metadata` に role を持つユーザーは**0名**。
 
 > [!warning] 権限の区別がどこにも無い
 > どちらのアプリも「ログインしているか」しか見ていない。統合すると、受注を見るためにログインした人が**支払明細書の発行・取り消し**も**モールのAPIキーの上書き**もできる状態になる。今は利用者が3名で問題が表に出ていないだけ。

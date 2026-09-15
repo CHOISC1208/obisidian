@@ -7,7 +7,7 @@ tags:
   - 決定事項
 client: 緑茶園グループ
 created: 2026-09-14
-updated: 2026-09-14
+updated: 2026-09-15
 aliases:
   - platform 統合方針
 ---
@@ -25,13 +25,13 @@ aliases:
 | # | 論点 | 決定 | 対応する障害 |
 |---|---|---|---|
 | D1 | 仕入業務の行き先 | **今回は自前前提で作る**（kintone案は本統合では採らない） | [[platform - 04 移植の障害と設計判断\|04]] #1 |
-| D2 | データアクセス層 | **1系統に統一する** | #2 |
+| D2 | データアクセス層 | **1系統に統一する**（2026-09-15 補足：Auth 管理 API によるユーザー作成に限り secret key を1本使う → 3章） | #2 |
 | D3 | マイグレーション | **新規実装では必ず共通ルールに合わせる** | #3 |
 | D4 | 権限 | **ロール単位と個人単位で設定でき、設定画面で superuser が操作する。superuser 自体は Supabase で直接設定する** | #4 |
 | D5 | その他のアーキテクチャ | **合わせられる部分はできるだけ合わせる** | #7〜#16 |
 | D6 | SQL の置き場 | **SQL は必ず `sql/` ディレクトリに整理する** | #3 |
 | D7 | 統合先 | **`ryokuchaen/ryokuchaen-platform`**（作成済み・Initial commit のみ） | — |
-| D8 | Supabase | **同じプロジェクト `ryokuchaen` を使い続ける。EC は `public` から新しいスキーマへ移す。`public` は原則使わない** | #7 |
+| D8 | Supabase | **同じプロジェクト `ryokuchaen` を使い続ける。EC は `public` から新しいスキーマへ移す。`public` は原則使わない**（2026-09-14 に `multi_channel_order_fetcher` へ移動済み → 1章） | #7 |
 | D9 | デザイン | **[[platform - 06 デザイン指示書]]（v2）に従う**（shadcn/ui を導入し既定テーマは上書き、深緑トークン、Noto Sans JP 1系統・400/500、影なし、ヘッダーのモジュールタブ、サイドバーの折りたたみ）。v1 への指摘は [[platform - 07 デザイン指示書レビュー]] | #9・#13 |
 | D10 | 画面とデータの切り方 | **画面の入口（ヘッダーのタブ・サイドバー・URL）はモジュール（受注／入出荷／帳票／マスタ）で切り、データの持ち主（スキーマ・`lib/`・権限キー）は業務（`inventory`／`ec`／`core`）で切る。** 受注残ボードと月締めは「入出荷」 | #8・#9 |
 
@@ -81,6 +81,12 @@ flowchart TB
 | `public` | — | **原則空。新しいオブジェクトを作らない** |
 
 ### EC オブジェクトの移動先（案）
+
+> [!warning] 2026-09-15 判明：EC のオブジェクトはすでに `public` に無い
+> 本番の履歴 `20260914133154 move_public_objects_to_multi_channel_order_fetcher_schema`（2026-09-14 22:31 JST）で、7テーブル・5ビューが `public` から **`multi_channel_order_fetcher` スキーマ**へ移されていた（テーブル名は変わっていない）。どのリポジトリにもファイルが無く、本書にも書かれていなかった。
+> 2026-09-15 にちぇるが**意図どおり**と確認。旧 EC Channel Console は supabase-js を既定の `public` のまま使っているため、この時点から動かない前提になる。
+> - 下の表の「現在」は移動前の名前。**段階5の移動元は `multi_channel_order_fetcher`** で、スキーマの改名で `ec` にできる見込み（ビューも一緒に移る）
+> - 移したテーブルには `public` の既定権限から来た anon・authenticated への grant が残っている。スキーマの usage が無いので届かないが、`ec` へ移すときに外す
 
 | 現在 | 移動先 | 理由 |
 |---|---|---|
@@ -142,9 +148,15 @@ sql/
 |---|---|
 | `public` を使わない方針と合う | PostgREST は既定で `public` しか見ない。直結なら新しいスキーマを API に公開する必要がない |
 | トランザクションが要る | 支払明細書の発行など、複数テーブルを1回で確定させる処理が inventory にある。supabase-js ではDB関数（RPC）に逃がすしかない |
-| 秘密情報が1つ減る | service_role キーが不要になり、DB 接続情報だけになる |
+| 秘密情報が1つ減る | ~~service_role キーが不要になり、DB 接続情報だけになる~~ → テーブルの読み書きには使わない。**Auth 管理 API（ユーザー作成）に限り secret key（`sb_secret_`）を1本持つ**（2026-09-15 決定。下の callout） |
 | `sql/` で管理する方針と合う | SQL をそのまま書く前提になる |
 | 移植量が小さい | EC の supabase-js 利用は5ファイル＋Route Handler 3本で、処理も単純（key/value の読み書き、取込、ビューの参照） |
+
+> [!success] 2026-09-15 決定：ユーザー作成だけは Auth 管理 API の secret key を使う
+> 「ユーザーの作成・招待を設定画面で行う」（2026-09-14 決定）には Supabase Auth の管理 API が要り、管理 API は service_role／secret key が必須。上の「service_role キーが不要」とぶつかったため、次のように決めた。
+> - **Auth 管理 API 専用に secret key を1本だけ持つ**。使うのはアプリの1ファイルだけで、テーブルの読み書きには使わない（データアクセスを1系統にするという D2 の本旨は保つ）。旧形式の service_role キーは 2026 年末で使えなくなるので新形式にする
+> - 採らなかった案：`auth.users` に SQL で直接書く（Supabase が対応していない方法で壊れやすい）／作成は今までどおり Supabase で直接行う（09-14 の決定を戻すことになる）
+> - **招待メールは使わず、初期パスワードを付けて作る**。custom SMTP を設定していないと、Supabase は Organization のメンバー以外にメールを送らないため。初期パスワードは superuser が本人に直接伝える
 
 ### 層の分け方
 
@@ -153,7 +165,7 @@ sql/
 | Server Component | 画面の読み取り | `lib/<domain>/queries.ts` を呼ぶ |
 | Server Action | 画面からの変更 | `lib/<domain>/actions.ts`。**先頭で必ず `requirePermission()`**。複数テーブルは `withTransaction` |
 | Route Handler | **次の3つに限る**：ファイルのダウンロード（CSV出力）／大きいファイルのアップロード／スクリプトや外部からの呼び出し（`test:mock` の Bearer など） | ここでも先頭で権限を確認する |
-| supabase-js | **ログイン（Auth）専用** | `.from()` でテーブルを読まない |
+| supabase-js | **ログイン（Auth）専用**。例外はユーザー作成の Auth 管理 API だけ（2026-09-15） | `.from()` でテーブルを読まない |
 
 > [!warning] CSV 取り込みをどちらで受けるかはファイルの実サイズ次第
 > Next.js の Server Actions はリクエスト本体が**既定で1MB まで**（同梱ドキュメント `server-actions.md`。`serverActions.bodySizeLimit` で変更可）。EC の取込 Route Handler は上限20MBにしているが、Vercel にデプロイすると関数のリクエスト本体の上限が別にかかる（4.5MB）。easyECS 受注CSV（3,211行）の実サイズを確認してから決める。
@@ -164,6 +176,7 @@ sql/
 - **エラーログ**：EC の `logError()`（保存に失敗しても応答を止めない）を `core.error_logs` 向けにして全体で使う
 - **監査ログ**：変更系の Server Action は必ず前後の値を残す（inventory の `audit()` を全体へ）。EC で一度も入っていない `imported_by` もこれで解消する
 - **DB 接続ユーザー**：今は inventory が `postgres` ユーザーで接続している。**アプリ専用のDBロール**（例：`platform_app`）を作り、`core.superusers` には読み取りしか与えない。こうすると「superuser は Supabase で直接設定」をDBの権限でも保証できる。Supabase の pooler 経由で独自ロールが使えるか、Transaction pooler（6543）に切り替えるかは要検証
+  - 2026-09-15 決定：ロール名は `platform_app`。全テーブルが「RLS 有効・ポリシーなし」なので、**bypassrls を付けて、読み書きできる範囲は grant で絞る**（ポリシーを足すと共通ルールに反するため。RLS は anon・authenticated に対する壁として残る）。接続は **Transaction pooler（6543）**（サーバーレスで接続数が膨らむため）。pooler 経由で実際につながるかは本番への適用後に確かめる → 2026-09-15 に Transaction pooler から `platform_app` で接続でき、bypassrls の付与も通った
 - **抽出スクリプト**（Airtable → inventory）は truncate を使うので、アプリとは別の接続ユーザーで動かす
 
 ---
@@ -188,6 +201,20 @@ sql/
 3. **何も割り当てられていない人は何も見えない**（既定は拒否）
 
 設定画面では、個人単位の上書きを「ロールに従う／許可／拒否」の3状態で見せる。
+
+### 初期ロール（2026-09-15 決定）
+
+既定が拒否なので、切り替え直後に締め出されないよう seed で用意する。以後の変更は設定画面で行う。
+
+| ロール | 権限 |
+|---|---|
+| 受注担当 | `ec.orders.view`・`ec.manual_orders.import`・`ec.backlog.view`・`ec.backlog.import` |
+| 仕入担当 | `inventory.receiving.edit`・`inventory.transactions.view`／`.edit`・`inventory.statements.view` |
+| 月締め | `inventory.transactions.view`・`inventory.statements.view`・`inventory.statements.issue` |
+| マスタ管理 | `inventory.masters.edit` |
+
+- `ec.credentials.edit`（モールの認証情報の上書き）は**どのロールにも入れない**。superuser だけが使え、必要なら個人単位で許可する
+- 割り当て：`info@yamagata-elab.com` は**4ロールすべて**（今は全機能を使えているため、締め出さない）。EC の検証用ボット（`test-bot@...`）は段階4でテストを移植するときに決める
 
 ### 権限の粒度（たたき台）
 
@@ -214,12 +241,13 @@ sql/
 
 - 権限の変更は `core.audit_logs` に残す
 - 設定画面のユーザー一覧は `auth.users` を読む必要がある。アプリ専用ロールに `auth` スキーマを丸ごと見せず、`core` 側に必要な列（メール・最終ログイン）だけを出す読み取り専用ビューを置く
+  - 2026-09-15 変更：ビューではなく **security definer の関数**にする。共通ルールの security_invoker のビューだと、呼ぶ側に `auth.users` の読み取り権限が要ってしまい、`auth` を見せない目的を果たせないため
 
 ### 設定画面（案）
 
 `/settings/access`（superuser だけが入れる）
 
-- **ユーザー**タブ：ユーザーの作成・招待（2026-09-14 決定）、ユーザーごとにロールを付ける／外す、権限を個人で上書きする（3状態）。superuser は印を付けて表示し、画面からは変えられない
+- **ユーザー**タブ：ユーザーの作成・招待（2026-09-14 決定。2026-09-15：招待メールは使わず初期パスワードを付けて作る → 3章）、ユーザーごとにロールを付ける／外す、権限を個人で上書きする（3状態）。superuser は印を付けて表示し、画面からは変えられない
 - **ロール**タブ：ロールの作成・名前変更・削除、ロール×権限の表で付け外し
 
 ---
@@ -350,6 +378,7 @@ ryokuchaen-platform/
 | 抽出スクリプト用の DB 接続（別ユーザー）・`AIRTABLE_API_KEY` | `scripts/` のみ |
 | `EC_MOCK_*` / `EC_DIST_DIR` | テストのみ |
 | ~~`SUPABASE_URL`・`SUPABASE_SERVICE_ROLE_KEY`~~ | **不要になる** |
+| `SUPABASE_SECRET_KEY` | Auth 管理 API（ユーザー作成）専用の secret key（2026-09-15 追加 → 3章） |
 
 チャネル認証情報は今までどおり DB（`ec.channel_credentials`）に置き、環境変数にしない。
 
@@ -358,10 +387,10 @@ ryokuchaen-platform/
 ## 6. EC を `public` から `ec` へ移す手順（方針）
 
 > [!tip] 無停止の切り替えは狙わない
-> 利用者は社内の3名なので、**旧 EC Channel Console を短時間止めて切り替える**方が安全。
+> 利用者は社内の3名（2026-09-15 確認：`auth.users` の3件のうち1件は EC の検証用ボットで、人は2名）なので、**旧 EC Channel Console を短時間止めて切り替える**方が安全。
 > `public` に互換ビューを残して無停止にする案もあるが、EC の supabase-js の `upsert`（認証情報・SKU対応表）がビュー越しに動くか不確実なので採らない。
 
-1. **ベースライン**：本番の `public` にある EC のオブジェクトを `sql/migrations` に書き起こし、適用済みとして履歴に登録する
+1. **ベースライン**：本番の `public` にある EC のオブジェクトを `sql/migrations` に書き起こし、適用済みとして履歴に登録する（2026-09-15：移動後の `multi_channel_order_fetcher` の現状で書き起こし、履歴に登録した）
 2. **platform 側の実装**：EC の画面を `ec` スキーマ前提・`pg` 直結で移植する。テーブル名を直書きしている箇所（`lib/env.ts`・`lib/logger.ts`・`lib/backlog/store.ts`・`lib/manual-orders/store.ts`・`lib/manual-orders/skuMap.ts`・`app/api/backlog/[view]`・`app/api/backlog/export/[tab]`・`app/api/manual-orders/[destination]/sku-map`・`test/run-mock-check.mjs`）は、データアクセスの統一でどのみち書き直す対象と同じ
 3. **切り替え**：旧アプリ（Vercel）を止める → `ec` スキーマを作ってテーブルとビューを移し、2本を改名するマイグレーションを適用 → platform をデプロイ
    - テーブルのスキーマ変更（`set schema`）では、データ・インデックス・制約・列が持つシーケンスが一緒に移る。ビューはテーブルを参照したまま `public` に残るので、別に移す
@@ -388,10 +417,14 @@ au PAY の中継プロキシの URL と共有シークレットは認証情報�
 - [x] ~~スキーマ名を `core`・`ec` にしてよいか~~ → **`core`・`ec` で決定**（2026-09-14）
 - [x] ~~個人単位の上書きに「拒否」まで要るか~~ → **4章の設計どおり「ロールに従う／許可／拒否」の3状態で決定**（2026-09-14）
 - [x] ~~ユーザーの作成・招待も設定画面で行うか（現状は Supabase で直接作っている）~~ → **行う**。ロール・個人単位の上書きの設定と同じ `/settings/access` に置く（2026-09-14 ちぇる）
-- [ ] 初期ロールのセットと、既存3名への割り当て。既定が拒否なので、切り替え直後に全員が締め出されないよう seed で用意する
-  - superuser は **`nieve.n.cook1208@gmail.com`** に決定（2026-09-14 ちぇる）。付与は `sql/ops/` の SQL で行う。初期ロールと残り2名の割り当ては未決
+- [x] ~~ユーザーの作成に Auth 管理 API の secret key が要り、「service_role キーは不要」（3章）とぶつかる~~ → **Auth 管理 API に限り secret key を1本持つ。招待メールは使わず初期パスワードで作成**（2026-09-15 ちぇる。3章の callout）
+- [x] ~~EC のオブジェクトが本番で `multi_channel_order_fetcher` スキーマに移っている（履歴 `20260914133154`。本書に記載なし）~~ → **意図どおり**（2026-09-15 ちぇる確認）。段階5の移動元はこのスキーマ（1章の warning）
+- [x] ~~`core` スキーマとアプリ専用DBロールの設計~~ → **確定**（2026-09-15 ちぇる）。`platform_app` は bypassrls＋grant、ユーザー一覧は security definer の関数（3章・4章）
+- [x] ~~初期ロールのセットと、既存3名への割り当て。既定が拒否なので、切り替え直後に全員が締め出されないよう seed で用意する~~ → **4ロール（受注担当・仕入担当・月締め・マスタ管理）。`info@yamagata-elab.com` には4ロールすべて**（2026-09-15 ちぇる。4章の「初期ロール」）
+  - superuser は **`nieve.n.cook1208@gmail.com`** に決定（2026-09-14 ちぇる）。付与は `sql/ops/` の SQL で行う
+  - 「既存3名」のうち1件は EC の `test:mock` 用ボット（`test-bot@multi-channel-order-fetcher.local`）で、人は2名だった。ボットの割り当ては段階4で決める
 - [ ] easyECS 受注CSVの実ファイルサイズ（Server Action の 1MB／Vercel の 4.5MB）
-- [ ] アプリ専用DBロールで pooler 経由の接続ができるか。Session pooler と Transaction pooler のどちらにするか
-- [ ] Supabase Auth の「新規サインアップを許可」がオフになっているか
+- [x] ~~アプリ専用DBロールで pooler 経由の接続ができるか。Session pooler と Transaction pooler のどちらにするか~~ → **Transaction pooler（6543）で `platform_app` から接続できた**（2026-09-15 確認）
+- [ ] Supabase Auth の「新規サインアップを許可」がオフになっているか（MCP では読めない。ダッシュボードで確認）。あわせて Security Advisor が「Leaked password protection が無効」を WARN で出している（2026-09-15）
 - [ ] 旧2リポジトリと、旧 EC Channel Console の Vercel プロジェクトをいつアーカイブするか
 - [ ] D1 を [[Airtable再構築 - 00 概要]] にどう反映するか
