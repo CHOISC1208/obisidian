@@ -8,7 +8,7 @@ client: 緑茶園グループ
 親論点: テーマ1 - 受注チャネル統合とツール複数人化
 フェーズ: 開発中
 created: 2026-09-04
-updated: 2026-09-12
+updated: 2026-09-15
 aliases:
   - EC Channel Console
 ---
@@ -49,6 +49,15 @@ aliases:
 >
 > **ただし読み取りと書き込みを対称に扱ってはいけない。** 読み取り（SQL Server 直参照）は壊れてもボードが映らないだけだが、書き込み（DB直INSERT）は受注番号の採番・関連テーブルの整合・メール送信や送り状連携のアプリ側ロジックを丸ごと迂回する。**書き込みはMDC経由を維持する**ため、TODO 3 の必要性は消えない。
 > 未確認の前提が3つ（①「SQL Serverと認識」は先方の認識であり未検証 ②Vercel/Supabaseからの到達性＝**au PAYのIP制限と同じ構造の壁**が出る可能性 ③スキーマはベンダー非公開でバージョンアップで変わりうる）。→ [[EC Channel Console - 変換器構想とMDC出力]]
+
+> [!question] 2026-09-15 追記：先方の現状運用が判明。Amazon/Yahoo/au PAYはPowerAutomateで自動化済み
+> platform リポジトリ側の設計相談で先方の現状運用について新しく分かったこと（先方談・裏取り未）。下の表の「🟧手作業（easyECSでCSV取込）」と矛盾はしないが、**その手作業を何で自動化しているか**が判明した。
+> - **楽天**：API連携（変更なし）
+> - **Amazon・Yahoo・au PAY**：**PowerAutomate**で「受注取得 → easyECS取込用CSV生成」を自動化している。先方いわく「遅い・管理が面倒」
+> - **Shopify・Temu・LINEギフト・電話/カタログ**：完全手動（変更なし）
+> - **ふるさと納税**：**easyECSに一切取り込まれていない**（別管理。[[EC Channel Console - 変換器構想とMDC出力|変換器構想ノート]]の「枚数？で管理」という以前の記述と符合）
+>
+> これを踏まえた方向性の見直し案を [[EC Channel Console - 変換器構想とMDC出力]] に整理した。**2026-09-16 先方に確認予定・現時点では未確定。**
 
 ## 棚卸課題との対応
 
@@ -187,6 +196,7 @@ aliases:
 - [x] ~~Supabase Advisor の CRITICAL（SECURITY DEFINER ビュー5本）~~ → **2026-09-13 是正済み**。`v_backlog_by_sku` / `v_backlog_by_date` / `v_backlog_by_jun` / `v_backlog_overdue` / `v_manual_order_lines_current` を `security_invoker = true` に変更（`supabase/migrations/0003_views_security_invoker.sql`）。読み取りは全て service_role 経由のため動作影響なし。ブランチ `fix/views-security-invoker` に未マージ
 - [ ] `public` の7テーブルはRLS有効・ポリシーなしのまま。ブラウザから anon キーで読ませる場合はポリシー設計が必要
 
+- [ ] 🟡 **PowerAutomateが現在出しているCSVのサンプルを1つ入手する**（Amazon/Yahoo/au PAYのeasyECS純正フォーマットの列仕様を確認するため。2026-09-15判明）→ [[EC Channel Console - 変換器構想とMDC出力]]
 - [ ] 実アカウントでの5チャネルのレスポンス照合（**au PAYマーケットは2026-09-09完了**。残り4チャネル）
 - [ ] **LINEギフト出店者向けAPIの仕様書を入手する**（入手できれば実装は可能。認証情報の項目は確定済み）→ 上記「LINEギフトは実装できるか」
 - [ ] Temuの実装（クロスモールの連携資料も見つかっておらず、対応状況自体が不明）
