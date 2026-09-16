@@ -1,0 +1,24 @@
+{
+  "id": "conv-1789561816497-3oefgbhyf",
+  "providerId": "claude",
+  "title": "Fix ASIS table to include TEMU and LINE in ECS",
+  "titleGenerationStatus": "success",
+  "createdAt": 1789561816504,
+  "lastActivityAt": 1789562076845,
+  "sessionId": "47c6db62-f46b-43a4-b64e-f51c4e05d732",
+  "selectedModel": "opus",
+  "providerState": {
+    "providerSessionId": "47c6db62-f46b-43a4-b64e-f51c4e05d732"
+  },
+  "linkedContentPath": "03_freelance/03-03_緑茶園/打ち合わせ/2026-09-16/テーマ1 - 受注チャネル統合の方向性協議.md",
+  "usage": {
+    "model": "opus",
+    "inputTokens": 2,
+    "cacheCreationInputTokens": 3818,
+    "cacheReadInputTokens": 61987,
+    "contextWindow": 1000000,
+    "contextTokens": 65807,
+    "percentage": 7,
+    "contextWindowIsAuthoritative": true
+  }
+}

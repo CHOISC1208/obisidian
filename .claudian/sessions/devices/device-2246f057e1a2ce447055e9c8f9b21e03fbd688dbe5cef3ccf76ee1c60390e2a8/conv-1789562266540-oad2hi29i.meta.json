@@ -1,0 +1,23 @@
+{
+  "id": "conv-1789562266540-oad2hi29i",
+  "providerId": "claude",
+  "title": "Order channel integration meeting minutes",
+  "titleGenerationStatus": "success",
+  "createdAt": 1789562266546,
+  "lastActivityAt": 1789562359881,
+  "sessionId": "41f91447-f181-45cf-8806-aa0864885dc4",
+  "selectedModel": "opus",
+  "providerState": {
+    "providerSessionId": "41f91447-f181-45cf-8806-aa0864885dc4"
+  },
+  "usage": {
+    "model": "opus",
+    "inputTokens": 2,
+    "cacheCreationInputTokens": 1096,
+    "cacheReadInputTokens": 60549,
+    "contextWindow": 1000000,
+    "contextTokens": 61647,
+    "percentage": 6,
+    "contextWindowIsAuthoritative": true
+  }
+}

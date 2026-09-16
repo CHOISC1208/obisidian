@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "conversationId": "conv-1789540871127-eyvve440e",
+  "records": [
+    {
+      "schemaVersion": 1,
+      "id": "msg-1789540871228-v32op1m",
+      "userTurnOrdinal": 1,
+      "state": "accepted",
+      "localMessageId": "msg-1789540871120-c05o9b0",
+      "timestamp": 1789540871120,
+      "rawDisplayText": "緑茶園のふるさと納税の状況教えて",
+      "canonicalText": "緑茶園のふるさと納税の状況教えて",
+      "images": [],
+      "contentDigest": "c0a90e050654fc1581bb489eeb41ab0aafb0ca279cb0bb9379d39165604b42ae",
+      "providerUserMessageId": "48b492d0-e978-41d5-ba32-1101904bd458",
+      "providerAssistantMessageId": "bb0a8298-3715-45d5-99a5-9a6037099a86"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "conversationId": "conv-1789561816497-3oefgbhyf",
+  "records": [
+    {
+      "schemaVersion": 1,
+      "id": "msg-1789561816574-esat1zg",
+      "userTurnOrdinal": 1,
+      "state": "accepted",
+      "localMessageId": "msg-1789561816494-pype6qz",
+      "timestamp": 1789561816494,
+      "rawDisplayText": "ASIS ですが、今TEMU と　LINEはECSに入れてないみたいです　表を修正してください",
+      "canonicalText": "ASIS ですが、今TEMU と　LINEはECSに入れてないみたいです　表を修正してください",
+      "context": {
+        "linkedContent": {
+          "path": "03_freelance/03-03_緑茶園/打ち合わせ/2026-09-16/テーマ1 - 受注チャネル統合の方向性協議.md"
+        }
+      },
+      "images": [],
+      "contentDigest": "b56bbdcfa1b81e3c3d312da5306126e84a4f54e2e0f98f96103224978dec0726",
+      "providerUserMessageId": "63ed3ddc-c8c5-4113-8846-85b8c8e4e1cd",
+      "providerAssistantMessageId": "ec8c0e5e-6cfc-4309-9384-42d85ad208d2"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1789561928455-1jjic09",
+      "userTurnOrdinal": 2,
+      "state": "accepted",
+      "localMessageId": "msg-1789561928452-ba6lop9",
+      "timestamp": 1789561928452,
+      "rawDisplayText": "- TEMU LINEは現在ECS（イージース）に入れていない\n- AmazonはAPI経由で取得を試みたが、取得できるデータが少ないため、CSVに切り替えた経緯がある\n- ShopifyやLINE GIFTなど各モールへの送り状番号の共有が、請求発行のために必要\n- **受注番号と送り状番号の紐付けが必須**：PG室で大和B2・佐川などへ送り状番号を出力しており、受注番号との紐付けで対応可能\n\nこういう話もありました",
+      "canonicalText": "- TEMU LINEは現在ECS（イージース）に入れていない\n- AmazonはAPI経由で取得を試みたが、取得できるデータが少ないため、CSVに切り替えた経緯がある\n- ShopifyやLINE GIFTなど各モールへの送り状番号の共有が、請求発行のために必要\n- **受注番号と送り状番号の紐付けが必須**：PG室で大和B2・佐川などへ送り状番号を出力しており、受注番号との紐付けで対応可能\n\nこういう話もありました",
+      "images": [],
+      "contentDigest": "ca6eff6bc97bcbbba8bfc6985d3848bb6ece89c6ebfbbcfe30e0bb5140f89391",
+      "providerUserMessageId": "84558f2e-fd52-4889-b5cd-618923be974d",
+      "providerAssistantMessageId": "1f539035-c61c-485c-8ef8-a89384cb909a"
+    }
+  ]
+}
