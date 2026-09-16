@@ -106,7 +106,7 @@ aliases:
 > - デプロイ後、画面遷移が毎回1〜3秒遅いという報告 → Vercel Functions の既定リージョン（`iad1`・米国）と Supabase（東京）が離れていたことが原因と判明。`vercel.json` で `hnd1`（東京）に固定して解消（一般的な知見として [[01_engineering/Vercel - Functionsのリージョン設定]] にも記録）
 > - 残作業：`ec._archived_multi_channel_order_fetcher_logs`（旧エラーログの控え）は運用が安定してから drop する。EC検証用ボットの権限適用は `test:mock` 相当の検証を作り直すときに判断する
 
-- [ ] **ログインを TrustLogin（GMO）の SSO に寄せるか**。2026-09-16 に要望。載せるメールドメインと、既存のパスワードログインを残すかが未決 → [[platform - 08 TrustLogin SSO 検討]]
+- [ ] **ログインを TrustLogin（GMO）の SSO に寄せるか**。2026-09-16 に要望。既存ユーザーの uuid が維持されるか（権限の割り当てが外れないか）と、パスワードログインを残すかが未決 → [[platform - 08 TrustLogin SSO 検討]]
 - [ ] **商品の対応づけをどう持つか**。仕入商品（取引先×規格）と販売SKU（セット・箱単位）は 1:1 にならない
 - [ ] [[テーマ2 - グループウェアの役割再定義]] の GUIファースト方針との整合。統合コンソールは保守の SPOF をさらに1か所に集める
 

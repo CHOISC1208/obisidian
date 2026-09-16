@@ -25,6 +25,9 @@ aliases:
 
 持ち込まれた案は「SPメタデータ取得 → TrustLogin でアプリ作成 → `supabase sso add` → 属性マッピング → アプリ側の導線 → プラン確認」の順だった。
 
+> [!warning] 2026-09-16 訂正：案にあった「メールドメインで束ねる」は不要
+> 案は `--domains ryokuchaen.co.jp` を前提にしていたが、**TrustLogin 側は利用者のメールドメインを問わない**（先方は `gmail.com` と `yamagata-elab.com` の両方を TrustLogin に登録済み）。ドメインは Supabase が IdP を引くための任意設定にすぎないので、**指定せず `signInWithSSO({ providerId })` でボタン1つにする**のが素直。混在ドメインのままで通る。
+
 - **プラン確認（案では最後）は前提条件**。SAML 2.0 は Pro 以上。→ 確認済み、**組織は Pro なので追加手配は不要**（2026-09-16、MCPで確認）
 - **SAML の有効化（案には無い）が最初に要る**。公式ドキュメントに「SAML 2.0 support is disabled by default on Supabase projects」とあり、ダッシュボードの Auth Providers で有効化するまで **SPメタデータのURL自体が引けない**。案の手順1はここで止まる
 
@@ -35,16 +38,17 @@ aliases:
 | プラン | 組織 `CHOISC1208's Org` は **pro**。SAML 利用可 |
 | 課金 | SSO MAU は $0.015／人（プラン枠の超過分のみ） |
 | SAML の初期状態 | **既定で無効**。ダッシュボードで有効化が必要 |
-| CLI | `supabase sso add --type saml --project-ref ... --metadata-file ... --domains ...` は案のとおりで正しい（CLI v1.46.4 以上） |
+| CLI | `supabase sso add --type saml --project-ref ... --metadata-file ...`（CLI v1.46.4 以上） |
+| メールドメイン | **任意**。「(Optional) Email domains that the organization's IdP uses」。指定しない場合は `signInWithSSO({ providerId })` で IdP を直接指定する（公式の例も「Sign in with Okta ボタン」の形） |
 | 属性マッピング | `--attribute-mapping-file <JSON>` でファイル指定。インラインのオプションではない。未指定なら Supabase 既定の email 検出順が使われる |
 | IdP-initiated | **PKCE と非互換**。TrustLogin のポータルからアイコン起動させたい場合は、アプリ側に起点URLを作って「ブックマークアプリ」として登録する回避策が要る |
 
 ## 効いてくるのは手順ではなく、このアプリ固有の3点
 
-> [!warning] 1. SSO で入った人は「別人」になる可能性がある
-> 権限は `core.user_roles`・`core.user_permissions`・`core.superusers` がすべて `auth.users.id`（uuid）で紐付いている（[[platform - 05 統合方針（決定事項と設計）]] 4章）。SSO の初回ログインで新しい uuid が発行されると、**既定が拒否なので何も見えない人が増えるだけ**になる。既存のメールアドレスと一致したときに既存アカウントへ identity が紐付くのかは、実機で `auth.identities` を見て確認するしかない。
+> [!warning] 1. SSO で入った人が「別人」になると権限が効かない
+> 権限は `core.user_roles`・`core.user_permissions`・`core.superusers` がすべて `auth.users.id`（uuid）で紐付いている（[[platform - 05 統合方針（決定事項と設計）]] 4章）。SSO の初回ログインで**新しい uuid** が発行されると、既定が拒否なので「ログインはできるが何も見えない人」が増えるだけになる。既存のメールアドレスと一致したときに既存アカウントへ identity が紐付くのかは、実機で `auth.identities` を見て確認するしかない。
 >
-> さらに、**現在の3アカウントのメールドメインは `gmail.com`・`yamagata-elab.com`・`multi-channel-order-fetcher.local` で、`ryokuchaen.co.jp` のユーザーは1人もいない**（2026-09-16 確認）。案が前提にしていた「会社ドメインで束ねる」形が、今のユーザー構成とそのままでは噛み合わない。superuser（`nieve.n.cook1208@gmail.com`）は SSO の対象外になるため、パスワードログインを残すかどうかの判断が要る。
+> 現在の人のアカウントは superuser（`nieve.n.cook1208@gmail.com`）と `info@yamagata-elab.com` の2つで、**どちらも TrustLogin に登録済み**。つまり SSO を入れると、この2人がそのまま SSO 経路に移る。ここで uuid が変わると **superuser 権限と4ロールの割り当てが両方とも外れる**ので、切り替え前に片方で試し、`core` 側の再割り当てが要るかを確かめる。
 
 > [!warning] 2. `proxy.ts` がコールバックを横取りする
 > 現在の `proxy.ts` は `/login` と静的アセット以外の全パスで未ログインを弾く（[[platform - 02 Supabase・認証・環境変数]]）。IdP から `?code=...` で戻った時点ではまだセッションが無いので、`/login` にリダイレクトされて `exchangeCodeForSession` まで届かない。**コールバックの除外が必須**。あわせて Supabase 側の Redirect URLs 許可リストへの登録も手順案には入っていない。
@@ -54,8 +58,8 @@ aliases:
 
 ## 決めること
 
-- [ ] **SSO に載せるメールドメイン**。既存3アカウントのどれとも一致しないので、ここが決まらないと `supabase sso add` まで進めない。そもそも先方が TrustLogin 上でどのドメインのアカウントを配っているかの確認から
-- [ ] **既存のパスワードログインを残すか、SSO に一本化するか**。superuser が SSO 対象外のドメインなら残すしかない。SSO 対象ドメインのユーザーがパスワードでも入れてしまうかは実機で確認する
+- [ ] **既存ユーザーの uuid が維持されるか**（最優先）。維持されないなら、切り替え手順に `core` の再割り当てを組み込む。ドメイン指定は不要と判明したので、残る技術的な未決はここだけ
+- [ ] **既存のパスワードログインを残すか、SSO に一本化するか**。公式も「SSO を使わない管理者アカウントを最低1つ残す」ことを安全要件に挙げている。TrustLogin 側が落ちたときに誰も入れなくなる形は避ける
 - [ ] **EC検証用ボット（`test-bot@multi-channel-order-fetcher.local`、Bearer トークン運用）の扱い**。SSO 一本化と両立しない（`test:mock` 相当の作り直しと同じ判断 → [[platform - 05 統合方針（決定事項と設計）]]「未決・要確認」）
 - [ ] **TrustLogin のポータルからアイコン起動させるか**（する場合はブックマークアプリ方式の起点URLが要る）
 - [ ] **TrustLogin 側が SP メタデータXMLのアップロードに対応しているか**〔未確認。手入力になる前提で ACS URL・Entity ID を控える〕
