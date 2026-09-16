@@ -13,7 +13,13 @@ method: [DeepAR埋め込み, TFT変数選択, GBDT, 動的エンコーディン�
 solver: [なし]
 maturity: 解説
 pages: 120-123
-tags: [SS2026, 時系列予測, 解説, 静的特徴量, 特徴量エンジニアリング, 基盤モデル]
+tags:
+  - SS2026
+  - 時系列予測
+  - 解説
+  - 静的特徴量
+  - 特徴量エンジニアリング
+  - 基盤モデル
 source_type: tutorial
 ---
 

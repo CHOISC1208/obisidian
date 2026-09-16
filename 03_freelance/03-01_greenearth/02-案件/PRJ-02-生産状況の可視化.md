@@ -6,7 +6,9 @@ platforms: ["green-earth-platform"]
 reqnavi_id: c18957ac-f076-4629-9385-a5bb923e957c
 created: 2026-06-24
 updated: 2026-07-26
-tags: [green-earth, project]
+tags:
+  - green-earth
+  - project
 ---
 
 # 生産状況の可視化

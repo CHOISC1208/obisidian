@@ -13,7 +13,8 @@ method: []
 solver: []
 maturity: 解説・提案
 pages: 116-117
-tags: [ORSJ2026秋]
+tags:
+  - ORSJ2026秋
 source_type: abstract
 ---
 

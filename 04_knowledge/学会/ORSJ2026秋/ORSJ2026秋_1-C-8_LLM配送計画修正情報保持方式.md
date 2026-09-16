@@ -13,7 +13,8 @@ method: [LLM]
 solver: []
 maturity: 数値実験
 pages: 78-79
-tags: [ORSJ2026秋]
+tags:
+  - ORSJ2026秋
 source_type: abstract
 ---
 

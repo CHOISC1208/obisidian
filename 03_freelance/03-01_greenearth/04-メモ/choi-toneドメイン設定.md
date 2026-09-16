@@ -4,7 +4,8 @@ title: choi-tone ドメイン設定
 created: 2026-07-13
 updated: 2026-07-13
 related_projects: []
-tags: [green-earth]
+tags:
+  - green-earth
 ---
 
 # choi-tone ドメイン設定

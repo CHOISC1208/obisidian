@@ -13,7 +13,8 @@ method: [QUBO, シミュレーテッドアニーリング]
 solver: []
 maturity: 数値実験
 pages: 58-59
-tags: [ORSJ2026秋]
+tags:
+  - ORSJ2026秋
 source_type: abstract
 ---
 

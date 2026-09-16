@@ -13,7 +13,8 @@ method: [機械学習, ゲーム理論]
 solver: []
 maturity: 理論
 pages: 110-111
-tags: [ORSJ2026秋]
+tags:
+  - ORSJ2026秋
 source_type: abstract
 ---
 

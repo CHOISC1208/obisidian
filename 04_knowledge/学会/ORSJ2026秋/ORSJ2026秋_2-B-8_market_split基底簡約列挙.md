@@ -13,7 +13,8 @@ method: [基底簡約（格子）]
 solver: []
 maturity: 数値実験
 pages: 212-213
-tags: [ORSJ2026秋]
+tags:
+  - ORSJ2026秋
 source_type: abstract
 ---
 

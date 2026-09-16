@@ -6,7 +6,9 @@ platforms: ["green-earth-platform"]
 reqnavi_id: 43e75b2a-90b5-421f-8e1e-c3ba4e8c5b67
 created: 2026-06-24
 updated: 2026-07-25
-tags: [green-earth, project]
+tags:
+  - green-earth
+  - project
 ---
 
 # 商品マスタ構築

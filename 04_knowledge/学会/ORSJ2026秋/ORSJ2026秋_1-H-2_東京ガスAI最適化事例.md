@@ -13,7 +13,8 @@ method: [機械学習]
 solver: []
 maturity: 実運用
 pages: 158-159
-tags: [ORSJ2026秋]
+tags:
+  - ORSJ2026秋
 source_type: abstract
 ---
 

@@ -6,7 +6,9 @@ platforms: ["green-earth-platform"]
 reqnavi_id: 2425ef62-a713-4d7d-bd20-f92804354bd9
 created: 2026-06-24
 updated: 2026-07-08
-tags: [green-earth, project]
+tags:
+  - green-earth
+  - project
 ---
 
 # クラウドPSI基盤の構築

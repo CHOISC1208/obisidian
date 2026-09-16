@@ -13,7 +13,8 @@ method: [MILP]
 solver: [Gurobi]
 maturity: 数値実験
 pages: 156-157
-tags: [ORSJ2026秋]
+tags:
+  - ORSJ2026秋
 source_type: abstract
 ---
 

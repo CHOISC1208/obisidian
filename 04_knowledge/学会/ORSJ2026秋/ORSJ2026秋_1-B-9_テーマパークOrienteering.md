@@ -13,7 +13,8 @@ method: [メタヒューリスティクス（ILS, GA）, 構築型ヒューリ�
 solver: []
 maturity: 数値実験
 pages: 60-61
-tags: [ORSJ2026秋]
+tags:
+  - ORSJ2026秋
 source_type: abstract
 ---
 

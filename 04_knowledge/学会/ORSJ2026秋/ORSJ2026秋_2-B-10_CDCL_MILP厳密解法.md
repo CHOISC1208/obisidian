@@ -13,7 +13,8 @@ method: [MILP, CDCL]
 solver: []
 maturity: 数値実験
 pages: 216-217
-tags: [ORSJ2026秋]
+tags:
+  - ORSJ2026秋
 source_type: abstract
 ---
 

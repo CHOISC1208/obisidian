@@ -13,7 +13,13 @@ method: [動的計画法, 逐次DP, ブロック座標降下法, temporal plan g
 solver: [C++/Python自作, CBC (PuLP) 比較用]
 maturity: 数値実験（倉庫レイアウト・MAPFベンチマーク）
 pages: 66-71
-tags: [SS2026, AGV, MAPF, 動的計画法, エネルギー, 産学連携]
+tags:
+  - SS2026
+  - AGV
+  - MAPF
+  - 動的計画法
+  - エネルギー
+  - 産学連携
 ---
 
 # 自動搬送システムの速度計画における完了時刻制約付き消費エネルギー最小化

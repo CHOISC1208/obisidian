@@ -5,7 +5,9 @@ platforms: ["green-earth-platform"]
 reqnavi_id: 711ed57d-090e-47e3-b79c-49cff9a75e32
 created: 2026-07-12
 updated: 2026-07-26
-tags: [green-earth, project]
+tags:
+  - green-earth
+  - project
 ---
 
 # 実績のDB化

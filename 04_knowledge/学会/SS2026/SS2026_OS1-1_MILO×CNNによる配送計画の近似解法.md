@@ -13,7 +13,11 @@ method: [MILO, クラスタ先ルート後法, CNN, NN埋め込み型MILP, Big-M
 solver: [Gurobi 13.0.2, Concorde, TensorFlow]
 maturity: 数値実験
 pages: 5-10
-tags: [SS2026, 最適化×機械学習, 学習済みモデルの埋め込み, VRP]
+tags:
+  - SS2026
+  - 最適化×機械学習
+  - 学習済みモデルの埋め込み
+  - VRP
 ---
 
 # 混合整数線形最適化と機械学習に基づいた配送計画問題の近似解法

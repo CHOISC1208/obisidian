@@ -13,7 +13,8 @@ method: [商用パッケージ, メタヒューリスティクス]
 solver: [Hexaly Optimizer]
 maturity: 解説・提案
 pages: 222-223
-tags: [ORSJ2026秋]
+tags:
+  - ORSJ2026秋
 source_type: abstract
 ---
 

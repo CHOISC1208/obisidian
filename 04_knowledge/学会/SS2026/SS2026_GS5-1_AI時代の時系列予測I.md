@@ -13,7 +13,13 @@ method: [グローバル予測モデル, AutoML, アンサンブル, DeepAR, 時
 solver: [MOAI-Forecasting]
 maturity: 解説・チュートリアル（ツール紹介）
 pages: 116-119
-tags: [SS2026, 時系列予測, 解説, 基盤モデル, 需要計画, MOAI]
+tags:
+  - SS2026
+  - 時系列予測
+  - 解説
+  - 基盤モデル
+  - 需要計画
+  - MOAI
 source_type: tutorial
 ---
 

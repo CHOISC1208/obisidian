@@ -5,7 +5,9 @@ platforms: ["green-earth-platform"]
 reqnavi_id: 90486c48-48cf-4e7f-8394-040213ee6e85
 created: 2026-07-08
 updated: 2026-07-08
-tags: [green-earth, project]
+tags:
+  - green-earth
+  - project
 ---
 
 # 勤怠修正フローの効率化（紙修正表→転記作業の削減）

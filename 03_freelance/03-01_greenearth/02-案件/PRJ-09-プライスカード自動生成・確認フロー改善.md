@@ -5,7 +5,9 @@ platforms: ["green-earth-platform"]
 reqnavi_id: 53b1eb42-1f67-4e0f-b528-29027b23f078
 created: 2026-08-12
 updated: 2026-08-12
-tags: [green-earth, project]
+tags:
+  - green-earth
+  - project
 ---
 
 # プライスカード自動生成・確認フロー改善

@@ -13,7 +13,13 @@ method: [局所探索, ejection chains, DAGによる差分評価, list/set/inter
 solver: [Hexaly Optimizer 15.0]
 maturity: 製品紹介
 pages: 124-129
-tags: [SS2026, ソルバ, ベンダー, 大規模最適化, モデリング言語, 事例]
+tags:
+  - SS2026
+  - ソルバ
+  - ベンダー
+  - 大規模最適化
+  - モデリング言語
+  - 事例
 source_type: vendor
 ---
 

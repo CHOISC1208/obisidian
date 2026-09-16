@@ -2,7 +2,8 @@
 type: platform
 repo: /Users/choiseoncheol/git/choi_tone
 role: 入力の窓口（フロントエンド／収集レイヤー）
-tags: [platform]
+tags:
+  - platform
 ---
 
 # choi-tone

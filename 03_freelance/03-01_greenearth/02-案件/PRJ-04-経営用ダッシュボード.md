@@ -6,7 +6,9 @@ platforms: ["green-earth-platform"]
 reqnavi_id: c152f6d9-7249-4d3e-87d4-6385c7815b11
 created: 2026-06-24
 updated: 2026-07-26
-tags: [green-earth, project]
+tags:
+  - green-earth
+  - project
 ---
 
 # 経営用ダッシュボード

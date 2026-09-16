@@ -13,7 +13,8 @@ method: [MILP, 分枝限定]
 solver: [LINGO]
 maturity: 理論
 pages: 114-115
-tags: [ORSJ2026秋]
+tags:
+  - ORSJ2026秋
 source_type: abstract
 ---
 

@@ -1,7 +1,9 @@
 ---
 type: moc
 title: MOC 手法別（学会論文）
-tags: [MOC, 学会]
+tags:
+  - MOC
+  - 学会
 ---
 
 # MOC 手法別

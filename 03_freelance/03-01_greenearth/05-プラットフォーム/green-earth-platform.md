@@ -2,7 +2,8 @@
 type: platform
 repo: /Users/choiseoncheol/git/green-earth-platform
 role: 業務の頭脳（バックオフィス／実行レイヤー）
-tags: [platform]
+tags:
+  - platform
 ---
 
 # green-earth-platform

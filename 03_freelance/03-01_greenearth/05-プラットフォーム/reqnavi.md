@@ -2,7 +2,8 @@
 type: platform
 role: 案件・タスク管理（社内ツール）
 url: https://req-navi.vercel.app
-tags: [platform]
+tags:
+  - platform
 ---
 
 # reqnavi

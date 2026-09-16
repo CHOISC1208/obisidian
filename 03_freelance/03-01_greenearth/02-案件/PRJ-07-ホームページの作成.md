@@ -5,7 +5,9 @@ platforms: ["cheesepige-site"]
 reqnavi_id: 62df6ca2-23e9-4576-9c70-ef2fa5400020
 created: 2026-07-08
 updated: 2026-07-08
-tags: [green-earth, project]
+tags:
+  - green-earth
+  - project
 ---
 
 # ホームページの作成

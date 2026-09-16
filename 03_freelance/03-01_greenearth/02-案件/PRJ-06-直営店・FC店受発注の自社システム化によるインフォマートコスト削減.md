@@ -5,7 +5,9 @@ platforms: ["green-earth-platform"]
 reqnavi_id: c9e91877-ed46-47be-a818-5cc8577fc89b
 created: 2026-07-08
 updated: 2026-07-29
-tags: [green-earth, project]
+tags:
+  - green-earth
+  - project
 ---
 
 # 直営店・FC店受発注の自社システム化によるインフォマートコスト削減

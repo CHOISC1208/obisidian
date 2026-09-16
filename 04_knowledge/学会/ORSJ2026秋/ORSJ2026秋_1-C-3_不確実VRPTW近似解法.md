@@ -13,7 +13,8 @@ method: [メタヒューリスティクス, GA, 局所探索]
 solver: []
 maturity: 数値実験
 pages: 68-69
-tags: [ORSJ2026秋]
+tags:
+  - ORSJ2026秋
 source_type: abstract
 ---
 

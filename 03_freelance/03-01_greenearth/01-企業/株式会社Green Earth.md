@@ -2,7 +2,9 @@
 type: company
 name: 株式会社Green Earth
 domain: cheesepige.jp
-tags: [green-earth, company]
+tags:
+  - green-earth
+  - company
 ---
 
 # 株式会社Green Earth

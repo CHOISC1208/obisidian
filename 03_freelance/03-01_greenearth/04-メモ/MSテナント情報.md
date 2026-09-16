@@ -4,7 +4,8 @@ title: MSテナント情報
 created: 2026-07-10
 updated: 2026-07-10
 related_projects: [PRJ-08-実績のDB化, PRJ-04-経営用ダッシュボード]
-tags: [green-earth]
+tags:
+  - green-earth
 ---
 
 # MSテナント情報

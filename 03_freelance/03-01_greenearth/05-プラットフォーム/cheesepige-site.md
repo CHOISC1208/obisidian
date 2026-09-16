@@ -2,7 +2,8 @@
 type: platform
 repo: （パス未確認）
 role: 顧客向けサイト
-tags: [platform]
+tags:
+  - platform
 ---
 
 # cheesepige-site
