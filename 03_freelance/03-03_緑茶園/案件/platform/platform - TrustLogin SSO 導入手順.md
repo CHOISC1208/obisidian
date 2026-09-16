@@ -1,0 +1,133 @@
+---
+tags:
+  - 緑茶園
+  - 案件
+  - platform
+  - 認証
+  - SSO
+  - 先方配布
+client: 緑茶園グループ
+created: 2026-09-16
+updated: 2026-09-16
+aliases:
+  - TrustLogin 設定依頼
+  - TrustLogin SSO 手順
+---
+
+# TrustLogin SSO 導入手順
+
+親: [[platform - 08 TrustLogin SSO 検討]] ／ 確認事項: [[08 要確認事項]]
+
+> [!info] このノートの位置づけ
+> TrustLogin SSO の**手順一式**。先方に渡す値と依頼文（[[EC Channel Console - 認証情報取得手順]] と同じくクライアント配布用のため値を正確に保つ）と、こちら側の実装・検証手順をまとめる。
+> 判断の経緯・なぜこの形にしたかは [[platform - 08 TrustLogin SSO 検討]]。
+
+## 進捗
+
+- [x] Supabase プロジェクトで SAML 2.0 を有効化（2026-09-16。SP メタデータが返ることを確認）
+- [ ] **先方への依頼**（依頼文は用意済み、まだ送っていない。送付したら日付と送付先をここに書く）
+- [ ] IdP メタデータの受領と `supabase sso add`
+- [ ] アプリ側の実装（ログインボタン・コールバック・`proxy.ts` の除外）
+- [ ] 検証用アカウント1つでの通し確認と、既存ユーザーの uuid 判定
+
+### 前提（2026-09-16 確認）
+
+| 項目 | 状態 |
+|---|---|
+| Supabase プラン | Pro。SAML 2.0 は Pro 以上で利用可 |
+| 課金 | SSO MAU $0.015／人（プラン枠の超過分のみ） |
+| メールドメイン | **指定しない**。`signInWithSSO({ providerId })` でボタン1つにする（→ [[platform - 08 TrustLogin SSO 検討]]） |
+| 現在の人のアカウント | `nieve.n.cook1208@gmail.com`（superuser）・`info@yamagata-elab.com`（4ロール）。どちらも TrustLogin に登録済み |
+| 検証用ボット | `test-bot@multi-channel-order-fetcher.local`（Bearer トークン運用）。SSO とは別扱い |
+
+## 渡す値（Supabase 側 = サービスプロバイダー）
+
+`https://tphdmbhufxcpdifxxvzl.supabase.co/auth/v1/sso/saml/metadata` の実体から起こしたもの（2026-09-16 確認）。
+公開エンドポイントで、含まれる証明書も公開鍵。伏せる必要は無い。
+
+| 項目 | 値 |
+|---|---|
+| ACS URL（Reply URL） | `https://tphdmbhufxcpdifxxvzl.supabase.co/auth/v1/sso/saml/acs` |
+| ACS バインディング | HTTP-POST（index 1）。HTTP-Artifact（index 2）は使わない |
+| Entity ID（Audience） | `https://tphdmbhufxcpdifxxvzl.supabase.co/auth/v1/sso/saml/metadata` |
+| メタデータ URL | 同上（`?download=true` で XML ダウンロード） |
+| SLO URL | `https://tphdmbhufxcpdifxxvzl.supabase.co/auth/v1/sso/saml/slo`（HTTP-POST） |
+| NameID 形式 | `emailAddress` と `persistent` の両方に対応 |
+| アサーション署名 | **必須**（メタデータで `WantAssertionsSigned="true"` を宣言している） |
+| SP 署名証明書 | メタデータ内の `KeyDescriptor use="signing"`。有効期限は 2170 年（実質無期限） |
+
+> [!warning] メタデータは XML ファイルではなく URL で渡す
+> `validUntil` が取得時刻の**約2日後**までしか無く、取得のたびに更新される作り。保存した XML を渡すと期限切れと判断されるおそれがある。
+> ファイルでしか受け付けない場合は、登録の直前に取り直してもらう。
+
+## 依頼文
+
+> 統合コンソール（緑茶園 統合コンソール）に TrustLogin でログインできるようにするため、
+> TrustLogin 側で SAML アプリの作成をお願いします。
+>
+> **1. SAML アプリを新規作成**
+> アプリケーション名：緑茶園 統合コンソール
+>
+> **2. サービスプロバイダー（SP）情報を登録**
+>
+> | 項目 | 値 |
+> |---|---|
+> | ACS URL（Reply URL） | `https://tphdmbhufxcpdifxxvzl.supabase.co/auth/v1/sso/saml/acs` |
+> | Entity ID（Audience） | `https://tphdmbhufxcpdifxxvzl.supabase.co/auth/v1/sso/saml/metadata` |
+> | メタデータ URL | `https://tphdmbhufxcpdifxxvzl.supabase.co/auth/v1/sso/saml/metadata` |
+> | SLO URL | `https://tphdmbhufxcpdifxxvzl.supabase.co/auth/v1/sso/saml/slo` |
+>
+> メタデータはファイルではなく**上の URL での登録**をお願いします（ファイルは有効期限が短いため）。
+>
+> **3. NameID にメールアドレスを割り当て**
+> 形式はメールアドレス（`emailAddress`）。メールアドレスの属性が送られてこないとユーザーを特定できません。
+>
+> **4. アサーションへの署名を有効にする**
+> こちら側がアサーション署名を必須としているため、レスポンス署名だけでは認証が通りません。
+>
+> **5. IdP メタデータ（XML）を共有**
+> 作成後の画面からダウンロードできるものを共有してください。
+>
+> **6. 利用者への割り当て**
+> まず検証用に1アカウントだけ割り当ててください。動作を確認してから全員に広げます。
+>
+> **あわせて確認させてください**
+> - TrustLogin の管理画面を操作されるのはどなたでしょうか（作業を代行する場合は一時的に管理者権限をお借りします）
+> - ご契約のプランで SAML アプリが利用できるかどうか
+> - TrustLogin のポータル（アプリ一覧のアイコン）からの起動もご希望ですか（ご希望の場合はこちら側に追加の実装が必要です）
+
+## 受け取るもの
+
+**IdP メタデータ（XML）**。これが届くまで、こちら側は `supabase sso add` 以降に進めない。
+
+## IdP メタデータ受領後の作業（こちら）
+
+1. プロバイダー登録（`--domains` は付けない）
+
+```bash
+supabase sso add --type saml --project-ref tphdmbhufxcpdifxxvzl --metadata-file ./idp-metadata.xml
+```
+
+   出力される **providerId（UUID）** を控える。確認は `supabase sso list --project-ref tphdmbhufxcpdifxxvzl`。
+
+2. 環境変数に providerId を追加（`NEXT_PUBLIC_SSO_PROVIDER_ID`。ブラウザから `signInWithSSO` に渡すため public でよい）
+3. Supabase ダッシュボードの **Redirect URLs** に本番・プレビューのコールバック URL を登録
+4. アプリ実装
+   - ログイン画面に「TrustLoginでログイン」ボタン（`signInWithSSO({ providerId, redirectTo })` → 返る `data.url` へ遷移）
+   - `/auth/callback` の Route Handler（`exchangeCodeForSession`）
+   - **`proxy.ts` のコールバック除外**（現状は `/login` 以外の未ログインを全て弾くため、`?code=...` が届かない）
+5. 属性マッピングは、まず既定（Supabase の email 検出順）で試す。合わなければ `supabase sso update <provider-id> --attribute-mapping-file ./attribute-mapping.json`
+
+## 検証（切り替え前に必ず行う）
+
+1. 検証用アカウント1つで SSO ログインする
+2. `auth.users` と `auth.identities` を確認し、**既存のメールアドレスと同じユーザーに identity が紐付いたか、新しい uuid が発行されたか**を判定
+3. 新しい uuid になっていた場合、権限（`core.user_roles`・`core.user_permissions`・`core.superusers`）は**すべて外れる**。`/settings/access` での再割り当て、superuser は `sql/ops/` の SQL を切り替え手順に組み込む
+4. 既存のパスワードログインが並存できるかを確認する
+
+## 未決
+
+決める内容と理由は [[platform - 08 TrustLogin SSO 検討]]「決めること」に置く。実行に直結するのは次の2つ。
+
+- [ ] 既存ユーザーの uuid が維持されるか（上の検証で判定。維持されないなら切り替え手順に再割り当てを組み込む）
+- [ ] パスワードログインを残すか、SSO に一本化するか。**SSO を使わない管理者アカウントを1つ残す**のが安全側

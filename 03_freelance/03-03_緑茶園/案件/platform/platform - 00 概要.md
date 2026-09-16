@@ -66,6 +66,7 @@ aliases:
 | [[platform - 06 デザイン指示書]] | 統合コンソールのデザイン指示書（**v2・正本**。07 の指摘を反映）。カラートークンとコントラスト、タイポグラフィ、モジュールと画面の割り当て、Tailwind v4 形式の CSS 変数、避けるべきパターン |
 | [[platform - 07 デザイン指示書レビュー]] | 指示書の検算（HSL と HEX のずれ、Tailwind v4 での書き方）、コントラスト検証、05 とのレイアウトの突き合わせ、既存コードとの差 |
 | [[platform - 08 TrustLogin SSO 検討]] | **2026-09-16**：TrustLogin（GMO）経由のログインを足したいという要望。手順案の検証結果と、ユーザー管理の持ち主をどちらにするかの未決事項 |
+| [[platform - TrustLogin SSO 導入手順]] | SSO 導入の手順一式。先方に渡す SP 情報と依頼文、`supabase sso add` 以降のこちらの作業、切り替え前の検証 |
 
 ## 着手前に決めること
 
@@ -105,6 +106,10 @@ aliases:
 > - 動作確認で2件の不具合を発見・修正：① au PAY 中継プロキシ（さくらVPS `ryokuchaen`）で `ufw` が443番ポートを許可しておらずAPIに接続できなかった（`sudo ufw allow 443/tcp` で解消。VPS側の設定漏れで、アプリのコードとは無関係）。② EC の `timestamptz` 列（`imported_at` など）が `pg` 標準どおり `Date` オブジェクトのまま返り、Reactが「Objects are not valid as a React child」でクラッシュしていた（手動受注取り込み画面が「ページが無い」ように見えた原因）。`lib/core/queries.ts` は元々 `Date` を前提にしていたため気づかず、EC側の該当箇所で `.toISOString()` の文字列化を追加して解消
 > - デプロイ後、画面遷移が毎回1〜3秒遅いという報告 → Vercel Functions の既定リージョン（`iad1`・米国）と Supabase（東京）が離れていたことが原因と判明。`vercel.json` で `hnd1`（東京）に固定して解消（一般的な知見として [[01_engineering/Vercel - Functionsのリージョン設定]] にも記録）
 > - 残作業：`ec._archived_multi_channel_order_fetcher_logs`（旧エラーログの控え）は運用が安定してから drop する。EC検証用ボットの権限適用は `test:mock` 相当の検証を作り直すときに判断する
+
+> [!info] 2026-09-16：TrustLogin（GMO）SSO の検討を開始。Supabase 側の SAML を有効化
+> ログインを TrustLogin に寄せたいという要望。持ち込まれた手順案を検証し、順番の誤り（プラン確認は前提／SAML 有効化が先）とドメイン指定が不要なことを確認した。SAML 有効化と SP 情報の確定まで済み、先方（TrustLogin 管理者）への依頼待ち。手順と依頼文は [[platform - TrustLogin SSO 導入手順]]、判断の経緯は → [[platform - 08 TrustLogin SSO 検討]]
+> - 最大の論点は**既存ユーザーの uuid が維持されるか**。権限は `auth.users.id` 基準なので、変わると superuser 権限とロール割り当てが外れる
 
 - [ ] **ログインを TrustLogin（GMO）の SSO に寄せるか**。2026-09-16 に要望。既存ユーザーの uuid が維持されるか（権限の割り当てが外れないか）と、パスワードログインを残すかが未決 → [[platform - 08 TrustLogin SSO 検討]]
 - [ ] **商品の対応づけをどう持つか**。仕入商品（取引先×規格）と販売SKU（セット・箱単位）は 1:1 にならない
