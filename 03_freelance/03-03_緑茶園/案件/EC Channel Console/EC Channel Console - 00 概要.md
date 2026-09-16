@@ -62,8 +62,8 @@ aliases:
 | Yahoo!ショッピング | 🟧手作業（easyECSでCSV取込） | ✅ 実装済み | 注文検索API `orderList` / 注文詳細API `orderInfo` |
 | au PAYマーケット | 🟧手作業（easyECSでCSV取込） | ✅ 実装済み。**2026-09-09 本番デプロイでの疎通・実データ取得を確認済み** | Wow!manager API `searchTradeInfoListProc` |
 | Shopify（自社EC） | 🟥断絶（一元管理に取込不可） | ✅ 実装済み | Admin GraphQL API `orders` |
-| Temu | 🟥断絶（コピー＆ペースト対応） | ⛔ スタブ（画面・認証情報フォームのみ、取得は未実装）。**公式受注APIの存在は2026-09-16に確認済み**、ブロッカーはアプリ審査と店舗モデル → [[Temu - Open Platform 受注リファレンス\|Temuリファレンス]] | Temu Open Platform `bg.order.list.v2.get`（未実装） |
-| LINEギフト | 🟥断絶（コピー＆ペースト対応） | 🔶 認証情報の項目は確定、受注取得は仕様書待ち。**フィールド名はベンダー資料から逆引き済み（2026-09-16）** → [[LINEギフト - API 受注リファレンス\|LINEギフトリファレンス]] | 出店者向けAPI（OAuth2。仕様書が非公開） |
+| Temu | 🟥断絶（コピー＆ペースト対応） | ✅ 実装済み（2026-09-16、公式ドキュメントに基づく。**実データ未照合**）。ブロッカーは実装から**アプリ審査と店舗モデルの確認**に移った。氏名・住所は取得しない → [[Temu - Open Platform 受注リファレンス\|Temuリファレンス]] | Temu Open Platform `bg.order.list.v2.get`＋`temu.order.amount.v2.query`（MD5署名） |
+| LINEギフト | 🟥断絶（コピー＆ペースト対応） | 🔶 認証情報の項目は確定、受注取得は仕様書待ち。**フィールド名はベンダー資料から逆引き済み（2026-09-16）**。応答→受注の変換と仮注文の判定だけ先に実装し、残りは通信部分（エンドポイント）のみ → [[LINEギフト - API 受注リファレンス\|LINEギフトリファレンス]] | 出店者向けAPI（OAuth2。仕様書が非公開） |
 
 > [!tip] この表が意味すること
 > 棚卸表で「🟥断絶」だった Shopify（自社EC）は、受注取得APIとしてはすでに実装済み。残る断絶は Temu・LINEギフトのみになった。
@@ -195,9 +195,10 @@ aliases:
 
 - [ ] 🟡 **PowerAutomateが現在出しているCSVのサンプルを1つ入手する**（Amazon/Yahoo/au PAYのeasyECS純正フォーマットの列仕様を確認するため。2026-09-15判明）→ [[EC Channel Console - 変換器構想とMDC出力]]
 - [ ] 実アカウントでの5チャネルのレスポンス照合（**au PAYマーケットは2026-09-09完了**。残り4チャネル）
-- [ ] 🟡 **Amazon：実装とSP-API仕様の差を確認・是正する**（認証ヘッダ名 `x-amzn-access-token` → 公式は `x-amz-access-token`／`NextToken` 未処理／`LastUpdatedAfter` 未併用／v0はdeprecated）。住所まで取るならDirect to Consumer Deliveryロール審査とFBM/FBAの確認が前提 → [[Amazon - SP-API 受注リファレンス]]
+- [ ] 🟡 **Amazon：実装とSP-API仕様の差を確認・是正する**（~~認証ヘッダ名 `x-amzn-access-token` → 公式は `x-amz-access-token`~~／~~`NextToken` 未処理~~ → **2026-09-16 是正済み**／`LastUpdatedAfter` 未併用（画面は「直近N日に作成された注文」の確認用なので当面不要）／v0はdeprecated（**実データで照合してから v2026-01-01 へ移行**する判断））。住所まで取るならDirect to Consumer Deliveryロール審査とFBM/FBAの確認が前提 → [[Amazon - SP-API 受注リファレンス]]
 - [ ] **LINEギフト出店者向けAPIの仕様書を入手する**（入手できれば実装は可能。認証情報の項目は確定済み）→ 上記「LINEギフトは実装できるか」。**2026-09-16：仕様は出店後に管理画面・案内資料で確認するものとされるため、先方の手元（ショップ管理画面のアプリ機能のヘルプ／出店時資料）を探してもらう**。入手できなければ受注CSV（Shift_JIS）の手動取り込みで代替 → [[LINEギフト - API 受注リファレンス]]
-- [ ] Temuの実装。~~対応状況自体が不明~~ → **2026-09-16 公式受注APIの存在を確認**。着手前に①緑茶園の店舗モデル（全托管なら対象なし）②Partner Platformでのアプリ登録・審査 ③日本本土店のrouterホスト を確認する → [[Temu - Open Platform 受注リファレンス]]
+- [x] ~~Temuの実装~~ → **2026-09-16 公式ドキュメントに基づいて実装（実データ未照合）**。~~③日本本土店のrouterホスト~~ → **GLOBAL（`openapi-b-global.temu.com`）と公式「Endpoints and Request Method」に明記**（Temu Partner Platform）
+- [ ] Temuを実運用に載せる前提：①緑茶園の店舗モデル（全托管なら対象なし）②Partner Platformでのアプリ登録・審査と店舗認可 → [[Temu - Open Platform 受注リファレンス]]
 - [ ] easyECS／クロスモールとの役割分担の最終決定 → [[09 初回すり合わせ論点]]
 - [x] ~~au PAYマーケットのIP制限をどう解くか決める~~ → **2026-09-09 解決済み：固定IPのVPSにプロキシを立てる方式**（easyECS SQL Server連携用のVPSと兼用）。IP登録・実データ取得まで確認完了 → 上記「au PAYマーケットのIP制限」
 - [ ] au PAYマーケットの会員番号（`AU_MEMBER_ID`）を Wow!manager「店舗構築 > 店舗情報 > 登録情報」で目視確認する（APIからは判定不能）

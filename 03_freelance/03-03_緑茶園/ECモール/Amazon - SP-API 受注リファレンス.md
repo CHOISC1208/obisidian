@@ -29,10 +29,10 @@ aliases:
 > [!warning] 2026-09-16 現行実装との突き合わせ（`ryokuchaen-platform` main `571d222` 時点・`lib/ec/clients/amazon.ts`。移植元の `multi-channel-order-fetcher` から同じ実装を引き継いでいる）
 > | 観点 | 現行実装 | このリファレンスとの差 |
 > |---|---|---|
-> | APIバージョン | Orders **v0**（`getOrders` → 先頭20件だけ `getOrderItems`） | v0 は deprecated。新規開発は v2026-01-01 推奨（§7） |
-> | 認証ヘッダ名 | **`x-amzn-access-token`** | 公式は **`x-amz-access-token`**（§2.2）。**実データでの照合が未了のチャネル**なので、この差で 403 になる可能性がある。要確認 |
-> | ページング | `MaxResultsPerPage=50`、`NextToken` 未処理 | 51件目以降を取りこぼす（§6.2） |
-> | 取得軸 | `CreatedAfter` のみ | ステータス変更（出荷済・キャンセル）を拾うには `LastUpdatedAfter` の併用が必要（§6.2） |
+> | APIバージョン | Orders **v0**（`getOrders` → 先頭20件だけ `getOrderItems`） | v0 は deprecated。新規開発は v2026-01-01 推奨（§7）→ 廃止日が未発表のため、**まず v0 のまま実データで照合し、その後に移行**する（照合前に版を変えると失敗原因の切り分けが難しくなる） |
+> | 認証ヘッダ名 | **`x-amzn-access-token`** | 公式は **`x-amz-access-token`**（§2.2）。**実データでの照合が未了のチャネル**なので、この差で 403 になる可能性がある。~~要確認~~ → **2026-09-16 公式どおりに是正** |
+> | ページング | `MaxResultsPerPage=50`、`NextToken` 未処理 | 51件目以降を取りこぼす（§6.2）→ **2026-09-16 是正**（100件／ページで `NextToken` を最大5ページ辿る。明細を取るのは先頭20件のまま） |
+> | 取得軸 | `CreatedAfter` のみ | ステータス変更（出荷済・キャンセル）を拾うには `LastUpdatedAfter` の併用が必要（§6.2）→ 画面は都度取得して保存しない「直近N日の作成分」の確認用なので**当面は変えない**。定期取り込みを作るときに併用する |
 > | 氏名 | `BuyerInfo.BuyerName ?? ShippingAddress.Name ?? "(非公開)"` | RDT も restricted ロールも無いので、実運用では**常に「(非公開)」になる**と見込まれる（§4） |
 > | Pending 注文の金額 | 考慮なし | `Pending` は明細の価格・税・送料が返らない（§3.2） |
 
