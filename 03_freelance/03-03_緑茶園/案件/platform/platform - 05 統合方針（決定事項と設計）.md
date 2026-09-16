@@ -7,7 +7,7 @@ tags:
   - 決定事項
 client: 緑茶園グループ
 created: 2026-09-14
-updated: 2026-09-15
+updated: 2026-09-16
 aliases:
   - platform 統合方針
 ---
@@ -429,4 +429,5 @@ au PAY の中継プロキシの URL と共有シークレットは認証情報�
 - [x] ~~アプリ専用DBロールで pooler 経由の接続ができるか。Session pooler と Transaction pooler のどちらにするか~~ → **Transaction pooler（6543）で `platform_app` から接続できた**（2026-09-15 確認）
 - [ ] Supabase Auth の「新規サインアップを許可」がオフになっているか（MCP では読めない。ダッシュボードで確認）。あわせて Security Advisor が「Leaked password protection が無効」を WARN で出している（2026-09-15）
 - [x] ~~旧2リポジトリと、旧 EC Channel Console の Vercel プロジェクトをいつアーカイブするか~~ → **`multi-channel-order-fetcher`（リポジトリ・Vercelプロジェクトとも）は段階5の切り替え直後にアーカイブ・削除済み**（2026-09-15）。`ryokuchaen-inventory` リポジトリは段階3で移植済みだが、こちらはまだアーカイブしていない（判断が別途必要）
+- [ ] **SSO（TrustLogin）を入れるか。入れるならユーザー管理の持ち主はどちらか**（2026-09-16 に要望）。権限は `auth.users.id` 基準なので、SSO で新しい uuid が発行されると既存の割り当てが効かない。載せるメールドメイン・既存のパスワードログインを残すか・検証用ボットの扱いが未決 → [[platform - 08 TrustLogin SSO 検討]]
 - [ ] D1 を [[Airtable再構築 - 00 概要]] にどう反映するか

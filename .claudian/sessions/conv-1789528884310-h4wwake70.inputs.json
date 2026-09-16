@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "conversationId": "conv-1789528884310-h4wwake70",
+  "records": [
+    {
+      "schemaVersion": 1,
+      "id": "msg-1789528884420-qufbbna",
+      "userTurnOrdinal": 1,
+      "state": "accepted",
+      "localMessageId": "msg-1789528884299-se6yfok",
+      "timestamp": 1789528884299,
+      "rawDisplayText": "緑茶園で　自作APPの　trustloginでの登録　ってどこかにある？",
+      "canonicalText": "緑茶園で　自作APPの　trustloginでの登録　ってどこかにある？",
+      "images": [],
+      "contentDigest": "d443b01aae9cf5624ea37b1f795e350af6ae5c546435d474a4048cb6f24485d5",
+      "providerUserMessageId": "a41b537e-61b1-4387-b3a0-e371cafef9ff",
+      "providerAssistantMessageId": "aebc2044-7718-4211-91a5-49bf9fe14c87"
+    }
+  ]
+}

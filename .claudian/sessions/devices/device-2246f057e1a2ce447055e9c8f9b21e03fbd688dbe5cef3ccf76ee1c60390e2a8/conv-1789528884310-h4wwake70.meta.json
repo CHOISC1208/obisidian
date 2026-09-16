@@ -1,0 +1,23 @@
+{
+  "id": "conv-1789528884310-h4wwake70",
+  "providerId": "claude",
+  "title": "Locate trustlogin registration in custom app",
+  "titleGenerationStatus": "success",
+  "createdAt": 1789528884328,
+  "lastActivityAt": 1789528930105,
+  "sessionId": "3f226f12-ca1d-44bb-8a37-7b44d5999128",
+  "selectedModel": "opus",
+  "providerState": {
+    "providerSessionId": "3f226f12-ca1d-44bb-8a37-7b44d5999128"
+  },
+  "usage": {
+    "model": "opus",
+    "inputTokens": 2,
+    "cacheCreationInputTokens": 560,
+    "cacheReadInputTokens": 32807,
+    "contextWindow": 1000000,
+    "contextTokens": 33369,
+    "percentage": 3,
+    "contextWindowIsAuthoritative": true
+  }
+}
