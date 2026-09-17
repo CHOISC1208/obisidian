@@ -8,7 +8,7 @@ client: 緑茶園グループ
 親論点: テーマ1 - 受注チャネル統合とツール複数人化
 フェーズ: 開発中
 created: 2026-09-04
-updated: 2026-09-16
+updated: 2026-09-17
 aliases:
   - EC Channel Console
 ---
@@ -43,6 +43,8 @@ aliases:
 >
 > **ただし読み取りと書き込みを対称に扱ってはいけない。** 読み取り（SQL Server 直参照）は壊れてもボードが映らないだけだが、書き込み（DB直INSERT）は受注番号の採番・関連テーブルの整合・メール送信や送り状連携のアプリ側ロジックを丸ごと迂回する。**書き込みはMDC経由を維持する**ため、TODO 3 の必要性は消えない。
 > 未確認の前提が3つ（①「SQL Serverと認識」は先方の認識であり未検証 ②Vercel/Supabaseからの到達性＝**au PAYのIP制限と同じ構造の壁**が出る可能性 ③スキーマはベンダー非公開でバージョンアップで変わりうる）。→ [[EC Channel Console - 変換器構想とMDC出力]]
+>
+> **2026-09-17：①②は解消。** ① SQL Server 2012 Express で確定（ただしサポート終了済み）。② 先方マスターPCに Tailscale を導入してもらい、[[EC Channel Console - さくらVPS（ryokuchaen）|さくらVPS]] から読み取り専用ログインで接続できた。③（テーブル定義書）は未解消。→ [[EC Channel Console - 変換器構想とMDC出力]]
 
 > [!question] 2026-09-15 追記：先方の現状運用が判明。Amazon/Yahoo/au PAYはPowerAutomateで自動化済み
 > platform リポジトリ側の設計相談で先方の現状運用について新しく分かったこと（先方談・裏取り未）。下の表の「🟧手作業（easyECSでCSV取込）」と矛盾はしないが、**その手作業を何で自動化しているか**が判明した。
