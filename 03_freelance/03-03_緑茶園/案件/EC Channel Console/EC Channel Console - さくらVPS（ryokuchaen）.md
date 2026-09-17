@@ -49,127 +49,10 @@ flowchart TD
 
 ## Tailscale（easyECS SQL Server への経路）
 
-2026-09-17 に開通。**VPS から `ECSSV01` の SQL Server に、読み取り専用ログインで接続できることを確認済み。**
+2026-09-17 に開通。このVPSは Tailscale 上で **`easyecs-relay`（`100.101.93.114`）** として、先方マスターPC `ECSSV01`（`100.100.97.48`）の SQL Server（TCP 14333）に届く。**先方PCのファイアウォールは、このVPSからの接続だけを許可している。**
 
-```mermaid
-flowchart LR
-  VPS["easyecs-relay<br/>（このVPS）<br/>100.101.93.114"] -->|"Tailscale<br/>TCP 14333"| ECS["ecssv01<br/>100.100.97.48<br/>tag:ecssv"]
-  ECS --> DB["MSSQLSERVER2<br/>ecsdb_esy"]
-```
-
-### tailnet は「こちら管理」に一本化した
-
-| 端末 | tailnet 上の名前 | Tailscale IP | 所有 |
-|---|---|---|---|
-| さくらVPS | `easyecs-relay` | `100.101.93.114` | `CHOISC1208@github` |
-| 先方マスターPC | `ecssv01` | `100.100.97.48` | タグ `tag:ecssv`（キー期限切れなし） |
-
-tailnet は **`choisc1208.github`（こちらのアカウント・Free プラン）**。
-
-> [!important] なぜ先方の tailnet ではなく、こちらの tailnet に入れたか
-> 先方は当初、遠藤氏のアカウントで**別の tailnet**（`yamagataelab.page`、有料プランのトライアル中）を作り、そこに `ECSSV01` を登録していた。別 tailnet の端末同士は通信できないため、次の3案を比べた。
->
-> | 案 | 採否 | 理由 |
-> |---|---|---|
-> | **A. `ECSSV01` をこちらの tailnet に入れ直す** | ✅ 採用 | 先方のトライアル終了に左右されない。アクセス制御をこちらで一元管理できる |
-> | B. 先方 tailnet のまま、ノード共有（Share）してもらう | 不採用 | 先方の管理画面操作が要る。トライアル終了後の挙動が未確認 |
-> | C. VPS を先方 tailnet に入れる | 不採用 | 管理が先方持ちになり、運用負荷とリスクが最大 |
->
-> **残る論点**：先方の業務サーバが、こちらの**個人アカウント（GitHub ログイン）の tailnet** に入っている。契約終了・引き継ぎ時には、先方持ちの tailnet へ移す（B 相当）かを判断する必要がある。
-
-### 先方マスターPC（`ECSSV01`）側で行ったこと（2026-09-17）
-
-遠藤氏に PowerShell で実行してもらった。
-
-1. `tailscale logout`（先方 tailnet から抜ける）
-2. `tailscale up --auth-key=... --unattended`（こちらで発行した**使い捨て・タグ付き**の認証キーで参加。`--unattended` は Windows に誰もログインしていなくても接続を保つため）
-3. Windows ファイアウォールに受信規則を追加：**`SQL Server from easyecs-relay (Tailscale)`**（TCP **14333**、許可元は **`100.101.93.114` のみ**、プロファイル Any）
-
-SQL Server・easyECS の設定は変えていない。
-
-### SQL Server について分かったこと
-
-| 項目 | 値 |
-|---|---|
-| バージョン | **SQL Server 2012**（11.0.5058）**Express Edition** |
-| 使われているインスタンス | **`MSSQLSERVER2`**（名前付き）。既定の `MSSQLSERVER` は停止中 |
-| 待ち受けポート | **14333**（全アドレス）。49448 も待ち受けているが用途未確認 |
-| SQL Server Browser | 停止中 → **接続時はポート番号を直接指定する**（インスタンス名では探せない） |
-| 業務DB | **`ecsdb_esy`**（ユーザーDBはこれ1つ。テーブル120・ビュー2） |
-| Tailscale 接続のネットワーク種別 | Private |
-
-> [!warning] SQL Server 2012 は Microsoft のサポートが終了している（延長サポート 2022年7月まで）
-> 先方・easyECS ベンダーが認識しているかは未確認 → [[08 要確認事項]]
-
-### 読み取り専用ログイン
-
-- **2026-09-17、こちらで `sa` を使って作成**。2026-09-09 に先方へ発行を依頼していたが、`sa` の認証情報を共有されたため自前で作った。**easyECS ベンダーには未連絡**
-- 権限は **`ecsdb_esy` の `db_datareader` のみ**。確認結果：sysadmin／db_datawriter／db_owner いずれも無し、DB 権限は `CONNECT`・`SELECT` だけ、ほかの DB にはアクセス不可
-- **VPS のジョブ・開発はこのログインだけを使う。`sa` は使わない**
-- 認証情報はこの Vault に書かない（開発機の `.env.local` で管理）
-
-> [!danger] `sa` のパスワードは変えられない前提で扱う
-> easyECS の接続先設定そのものが `sa` を使っている（2026-09-09 に先方の接続先設定画面で確認）。**`sa` のパスワードを変えると easyECS 本体が繋がらなくなるおそれがある。** 変える場合はベンダーに確認してから。
-
-### つまずいたポイント
-
-> [!warning] ポートは 1433 ではなく 14333
-> 既定の 1433 で規則を作ってもタイムアウトした。名前付きインスタンスは既定ポートを使わない。**`Get-NetTCPConnection -State Listen` で `sqlservr` の待ち受けポートを見て**特定した。
-
-> [!warning] ファイアウォール規則の追加には「管理者として実行」が必要
-> 通常の PowerShell（プロンプトが `C:\Users\...`）だと `New-NetFirewallRule` が「アクセスが拒否されました」になる。`tailscale` コマンドは管理者でなくても通る。管理者で開くとプロンプトは `C:\WINDOWS\system32`。
-
-> [!info] 直接接続ではなく DERP（東京）経由
-> `tailscale ping` の結果は `via DERP(tok)`・`direct connection not established`（17〜23ms）。先方ルーターの事情と思われる。定期同期の用途では問題ない。
-
-### 接続情報（TablePlus などから繋ぐとき）
-
-> [!warning] パスワードはここに書かない
-> 読み取り専用ログインのパスワードは、開発機の `.env.local`（`salserverpass_read`）で管理する。`sa` の認証情報は使わない前提で、Vault にも残さない。
-
-**データベース**（VPS から見た宛先）
-
-| 項目 | 値 |
-|---|---|
-| 種類 | Microsoft SQL Server（2012 Express） |
-| Host | `100.100.97.48`（`ecssv01` の Tailscale IP） |
-| Port | `14333` |
-| インスタンス | `MSSQLSERVER2`（Browser 停止中のため、指定はポート番号で行う） |
-| Database | `ecsdb_esy` |
-| User | `read`（読み取り専用。`ecsdb_esy` の `db_datareader` のみ） |
-| Password | `.env.local` の `salserverpass_read` |
-| 暗号化 | オフで接続できる（経路は SSH と Tailscale で暗号化済み） |
-
-先方社内で使われている接続文字列は `ECSSV01\MSSQLSERVER2,14333`（easyECS の接続先設定画面。2026-09-09 確認）。`ECSSV01` という名前は先方LAN内でしか引けないため、**外からは必ず IP で指定する**。
-
-**SSH（踏み台：このVPS）**
-
-| 項目 | 値 |
-|---|---|
-| Server | `160.16.209.237` |
-| Port | `22` |
-| User | `ubuntu` |
-| 鍵 | `~/.ssh/ryokuchaen_vps_new`（開発機の `~/.ssh/config` では `ryokuchaen-vps`） |
-
-TablePlus では、新規接続で Microsoft SQL Server を選び、上の「データベース」を入力したうえで **Over SSH** にチェックを入れて「SSH」の値を入れる。SSL のエラーが出たら SSL をオフ（または Trust server certificate をオン）にする。
-
-> [!caution] 本番の easyECS が使っているDB
-> `read` には書き込み権限が無いので、TablePlus でセルを編集しても保存時に拒否される。ただし**読み取りでも、大きなテーブルへの条件なしの集計・並べ替えは easyECS の受注処理を待たせることがある**。重いクエリは営業時間外に行う。
-
-### 接続の確かめ方
-
-```bash
-# VPS 上で
-tailscale ping ecssv01
-nc -vz ecssv01 14333
-```
-
-開発機から SQL Server を触るときは、VPS を踏み台にした SSH トンネルを使う（VPS には SQL クライアントを入れていない）。
-
-```bash
-ssh -N -L 14333:100.100.97.48:14333 ryokuchaen-vps
-# → 開発機の 127.0.0.1:14333 が ECSSV01 の SQL Server に繋がる
-```
+- VPS 側の状態（2026-09-17 確認）：`tailscaled` は自動起動・稼働中、自動更新オン、**ノードキーの期限は無効化済み**（既定のままだと 2027-03-08 に切れる予定だった）
+- **Tailscale の構成・先方PCで行った設定・SQL Server の情報・読み取り専用ログイン・開発機からの繋ぎ方は [[easyECS - 01 DB接続（Tailscale・SQL Server）]] を正本とする**（2026-09-17 に本ノートから移した）
 
 ## サーバー情報
 
@@ -220,22 +103,14 @@ ssh ubuntu@tk2-246-32983.vs.sakura.ne.jp
   再起動中は au PAYマーケットの受注取得が一時的に落ちる（プロキシが止まるため）。取り込み作業と重ならない時間に実施する。
 - [ ] SSH鍵認証に切り替え、パスワード認証を無効化するか判断する（現状はパスワード認証）
   - 2026-09-17 時点で、開発機からは鍵（`~/.ssh/config` の `ryokuchaen-vps`）で入れることを確認。パスワード認証が無効化済みかは未確認
-- [ ] **Tailscale のアクセス制御を絞る**。現在は既定の「全部許可」のまま。`easyecs-relay` → `tag:ecssv` の TCP 14333 だけに絞る（ポリシーには `tagOwners` の `tag:ecssv` だけ追加済み）
-- [ ] 契約終了・引き継ぎ時に、`ECSSV01` を先方持ちの tailnet へ移すか判断する（上記「なぜ先方の tailnet ではなく…」）
-- [ ] **Tailscale を有料プランにするか、誰が契約するかを決める。** 機能は無料の Personal で足りるが、Personal は規約上「非商用に限る」（2026-09-17 料金ページで確認）。有料化するなら、こちらの tailnet を Standard（約 $8／ユーザー／月）にするより、**先方の独自ドメインの tailnet で契約して移す**ほうが持ち主として自然（上の引き継ぎの論点と同じ判断）。`yamagataelab.page` が緑茶園のドメインか、先方の IT を支援する別会社のものかは未確認
-- [x] ~~`easyecs-relay`（VPS）のノードキーの期限を無効にする~~ → **2026-09-17 無効化**。タグなしのユーザー所有端末だったため、既定で 2027-03-08 に期限切れ（＝ECSSV01 に届かなくなる）の予定だった。`ecssv01` はタグ付きのため最初から期限なし
-- [ ] `ECSSV01` の Tailscale 自動更新を有効にする（次に先方PCに入るとき `tailscale set --auto-update`）。VPS 側は自動更新オンを確認済み
-- [ ] `ECSSV01` がスリープ・電源オフにならない設定か先方に確認する。あわせて「タスクトレイの Tailscale からログアウトしない・アンインストールしない」と伝える
-- [ ] **切れたことに気づける仕組みを作る。** 同期ジョブに「SQL Server に接続できなければ通知」を入れる。ジョブができるまでは VPS で定期的に疎通（`nc -vz 100.100.97.48 14333`）を確認して通知する仕組みを検討
-
-> [!info] Tailscale は「使っていない」ことでは切れない
-> 無通信の期間で端末が切断・削除される仕組みは無い。切れる原因になるのは、ノードキーの期限切れ（上記で対処済み）、端末側の停止・ログアウト、クライアントの極端な旧版化。
-- [ ] au PAY用に**このツール専用のAPIキー**を発行してもらうか判断する（現在クロスモールとキーを共用している）→ [[EC Channel Console - 00 概要]]
+- [ ] 2026-09-17 のログで、海外IPから `root`・`ubuntu` へのパスワード総当たりが数分おきに来ていた（すべて失敗）。**パスワード認証の無効化を優先する**
+- Tailscale・`ECSSV01` まわりの運用TODO（アクセス制御の絞り込み、切断の検知、有料化・tailnet の持ち主）は [[easyECS - 01 DB接続（Tailscale・SQL Server）]] の「運用TODO」へ移した
 
 ## 関連
 
 - [[EC Channel Console - 00 概要]] — au PAYマーケットのIP制限と、その解決の経緯
 - [[EC Channel Console - 変換器構想とMDC出力]] — Tailscale＋VPS経由で easyECS の SQL Server を読む構想（2026-09-17 経路開通）
+- [[easyECS - 00 概要]] — Tailscale で繋いでいる easyECS の DB（接続方法・DB構造）
 - [[08 要確認事項]] — SQL Server 2012 のサポート終了・テーブル定義書・負荷の許容など、先方に確認が残っている事項
 - [[各モール API認証情報の取得手順]] — 先方に渡す配布用資料。IP登録の説明はこちら
 - [[クロスモール（I'LL社）]] — 一元管理SaaS各社も固定IPを確保している、という判断根拠
