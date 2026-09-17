@@ -517,4 +517,5 @@ erDiagram
 ## 関連
 
 - [[easyECS - 00 概要]] ／ [[easyECS - 01 DB接続（Tailscale・SQL Server）]] ／ [[easyECS - 02 DB構造（ecsdb_esy）]]
+- `ツール/easyECS/sql/01_受注残の明細.sql` — この3テーブルから受注残を取る SQL の案（未実行）
 - [[platform - 10 変換器構想とMDC出力]] — 受注CSVの解析結果（2026-09-08）

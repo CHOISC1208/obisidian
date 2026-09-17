@@ -482,6 +482,7 @@ Shopify / LINEギフト / Temu
 - [x] ~~🟢 **受注残ボードに使うテーブルを特定する**（`ecsdb_esy` のテーブル120・ビュー2）~~ → **2026-09-17 特定：`t_sell`・`t_sell_delivery`・`t_sell_goods`**。受注CSVの一意キーが `t_sell_goods` の主キーと一致。全列の整理は [[easyECS - 03 受注テーブル（t_sell系）]]
 - [ ] **受注CSVの「ストア名」と `store_cd` を照合する**（trim で楽天とAmazon を混ぜている疑い。上記 warning）
 - [ ] **VPS 上の定期ジョブ（SQL Server → Supabase）を実装する**。テーブル特定の後。platform リポジトリ側の `BacklogSource`（`easyecs_sqlserver`、現在スタブ）を置き換える
+  - 抽出 SQL の案（2026-09-17・未実行）は `ツール/easyECS/sql/`。CSV との突き合わせ・期間の決め方などの未決事項は `01_受注残の明細.sql` 冒頭のコメント
 - [ ] **Tailscale のアクセス制御を `easyecs-relay` → `tag:ecssv` の TCP 14333 だけに絞る**（現在は既定の全部許可）
 - [ ] **SQL Server 2012 のサポート終了を先方に共有する**（→ [[08 要確認事項]]）
 - [ ] **受注残ボード要件定義書 §9 を書き直す** — ASP前提（FTP/APIオプションの現実度比較）は前提ごと誤り。SQL Server 直参照を本命として再構成する。あわせて §5.7 冪等性・§7.5 取り込み画面・§13-Q1/Q7 も見直し
