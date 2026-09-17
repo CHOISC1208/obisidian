@@ -30,14 +30,37 @@ aliases:
 
 月数百円のVPS1台で、**構造の同じ壁が2つ**解ける。どちらも「送信元が固定IPでないと繋げない」という同型の問題。
 
+> [!note] 2026-09-17：下の図を今の構成に更新した
+> 更新前の図は「EC Channel Console 本体（Vercel）」と「定期ジョブで同期（未実装）」の点線だった。easyECS の同期ジョブが稼働し、アプリも統合コンソール（`ryokuchaen-platform`）に替わったため書き直した。
+
+### 全体構成（2026-09-17 時点）
+
 ```mermaid
-flowchart TD
-  V["Vercel<br/>（EC Channel Console 本体）"] -->|"シークレットヘッダー認証"| P
-  P["さくらVPS ryokuchaen<br/>固定IPv4 160.16.209.237<br/>Caddy リバースプロキシ"] -->|"登録済みIPからのリクエスト"| AU["au PAYマーケット<br/>Wow!manager API"]
-  P -->|"Tailscale（2026-09-17 開通）"| ECS["ECSSV01<br/>easyECS マスターPC<br/>SQL Server 2012 Express"]
-  P -.->|"定期ジョブで同期（未実装）"| SB["Supabase"]
-  V --> SB
+flowchart LR
+  U["先方スタッフのブラウザ"] --> V["Vercel（東京）<br/>統合コンソール<br/>ryokuchaen-platform"]
+  V -->|"pg 直結（platform_app）<br/>画面の読み書き"| SB[("Supabase ryokuchaen（東京）<br/>受注残は ec.order_backlog_*")]
+  V -->|"シークレットヘッダー認証"| CADDY
+  subgraph VPS["さくらVPS ryokuchaen（固定IPv4 160.16.209.237）"]
+    CADDY["Caddy<br/>au PAY 中継プロキシ"]
+    JOB["cron 15分ごと<br/>受注残の同期ジョブ（Node.js）"]
+  end
+  CADDY -->|"登録済みIPからのリクエスト"| AU["au PAYマーケット<br/>Wow!manager API"]
+  JOB -->|"Tailscale・TCP 14333<br/>読み取り専用ログイン read"| ECS[("ECSSV01（先方マスターPC）<br/>easyECS SQL Server 2012 Express")]
+  JOB -->|"platform_app<br/>スナップショットを保存"| SB
 ```
+
+**受注残ボードのデータの流れ**：easyECS（正本）→ VPS の cron が15分ごとに読む → Supabase にスナップショットとして保存 → 画面（Vercel）は開くたびに Supabase の最新を読む。
+
+| 置き場所 | 持っているもの |
+|---|---|
+| easyECS（`ECSSV01`） | 受注の正本。こちらからは**読むだけ**（書き込みは MDC 形式CSVの取込に限る。[[platform - 10 変換器構想とMDC出力]]） |
+| さくらVPS | 同期ジョブのプログラム・接続設定（権限 600）・実行ログ（店舗ごとの件数の合計だけ。受注番号などは残さない）。**受注データそのものは置かない** |
+| Supabase | 取り込んだ受注残の明細。連携分は最新5回分だけ残す |
+| Vercel | 何も持たない（画面を出すたびに Supabase を読む） |
+
+- **なぜ Vercel から easyECS を直接読まないか**（届かない・easyECS に負荷をかける・PC が止まると画面も止まる）は [[platform - 10 変換器構想とMDC出力]] の「2026-09-17：VPS中継＋Supabase同期を確定」
+- 実装の正本：ジョブ本体と画面は `ryokuchaen-platform` の `docs/easyecs-backlog-sync.md`、サーバへの配置・cron・Node.js は `ryokuchaen_sakuravps` の `docs/runbook.md`「5. easyECS 受注残の同期ジョブ」
+- 経路（Tailscale・先方PCの設定・ログイン）は [[easyECS - 01 DB接続（Tailscale・SQL Server）]]
 
 | 役割 | 状態 | 詳細 |
 |---|---|---|

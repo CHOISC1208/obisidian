@@ -19,7 +19,7 @@ aliases:
 親: [[easyECS - 00 概要]] ／ 関連: [[さくらVPS（ryokuchaen）]]
 
 > [!warning] 認証情報はこのノートに書かない
-> 読み取り専用ログインのパスワードは開発機の `.env.local`（`sqlserverid_read`／`salserverpass_read`）で管理する。`sa` の認証情報は使わない前提で、Vault にも残さない。
+> 読み取り専用ログインのパスワードは開発機の `.env.local`（`sqlserverid_read`／`salserverpass_read`。同期ジョブ用に同じ値を `EASYECS_SQL_USER`／`EASYECS_SQL_PASSWORD` でも持つ）で管理する。VPS には同期ジョブの設定ファイル（権限 600）として送っている。`sa` の認証情報は使わない前提で、Vault にも残さない。
 
 ## 経路
 
@@ -34,7 +34,7 @@ flowchart LR
 
 - **SQL Server に届くのは VPS だけ。** 先方PCのファイアウォールで、許可元を VPS の Tailscale アドレスに限定している
 - 開発機は Tailscale に参加していない。VPS を踏み台にした SSH トンネルで繋ぐ
-- 将来の同期ジョブも VPS 上で動かす。Vercel からは直接行かない（[[platform - 10 変換器構想とMDC出力]] の判断）
+- **受注残の同期ジョブは VPS 上で動いている**（2026-09-17〜、cron で15分ごと、`read` ログインで読む）。Vercel からは直接行かない（[[platform - 10 変換器構想とMDC出力]] の判断）。Supabase・Vercel まで含めた全体の構成図は [[さくらVPS（ryokuchaen）]] の「全体構成」
 
 ## Tailscale
 
