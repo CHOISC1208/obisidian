@@ -42,7 +42,7 @@ flowchart TD
 | 役割 | 状態 | 詳細 |
 |---|---|---|
 | **au PAYマーケット中継プロキシ**（Caddy＋シークレットヘッダー認証＋Let's Encrypt自動HTTPS） | 🟢 **稼働中**。2026-09-09 に本番デプロイから実データ62件の取得を確認 | → [[platform - 09 受注機能（旧 EC Channel Console）]]「au PAYマーケットのIP制限」 |
-| **easyECS の SQL Server から読み取り、Supabaseへ同期する定期ジョブ** | 🟡 **経路と読み取り専用ログインは用意済み（2026-09-17）**。ジョブ本体は未実装（受注残に使うテーブルの特定待ち） | → [[platform - 10 変換器構想とMDC出力]] |
+| **easyECS の SQL Server から読み取り、Supabaseへ同期する定期ジョブ** | 🟢 **稼働中（2026-09-17〜）**。cron で15分ごと。19:45 の自動実行で保存まで確認。Node.js はユーザー領域（`~/.local/node`）に置いた。配置・更新の手順は `ryokuchaen_sakuravps` リポジトリの runbook「5. easyECS 受注残の同期ジョブ」 | → [[platform - 10 変換器構想とMDC出力]] |
 
 > [!note] 2026-09-12 時点の記述（履歴として残す）
 > VPS側には Tailscale を導入済み。**繋ぐ相手側（`ECSSV01`）が未対応**なので、SQL Server 側の役割はまだ動いていない。

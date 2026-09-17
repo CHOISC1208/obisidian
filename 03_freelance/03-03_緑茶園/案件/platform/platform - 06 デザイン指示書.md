@@ -7,7 +7,7 @@ tags:
   - 決定事項
 client: 緑茶園グループ
 created: 2026-09-14
-updated: 2026-09-14
+updated: 2026-09-17
 版: v2
 aliases:
   - 統合コンソール デザイン指示書
@@ -116,7 +116,7 @@ aliases:
 ```
 ┌──────────────────────────────────────────────────────┐
 │ ヘッダー（52px）                                        │
-│  モジュールタブ：受注 / 入出荷 / 帳票 / マスタ    ユーザーメニュー │
+│  モジュールタブ：ダッシュボード / 受注 / 入出荷 / 帳票 / マスタ  ユーザーメニュー │
 ├────────────┬─────────────────────────────────────────┤
 │ サイドバー    │ コンテンツ                                │
 │ 240px       │ 一覧 → 詳細の2ペイン、または単一ビュー         │
@@ -166,12 +166,12 @@ URL の英語名は仮。
 | モジュール | サイドバーのグループ | 画面 | URL（仮） | データ | 権限キー |
 |---|---|---|---|---|---|
 | （ホーム） | — | 権限のある業務の要約（今日の入荷・月締め待ち・要確認、チャネルの接続状態） | `/` | inventory・ec | 各画面の閲覧権限 |
+| **ダッシュボード** | 受注残 | 受注残ボード（easyECS 連携。2026-09-17 に手動表示〔CSV〕は画面から外した） | `/dashboard/backlog/live` | ec | `ec.backlog.view` / `.import` |
 | **受注** | — | 受注の概要（チャネルの接続状態） | `/orders` | ec | `ec.orders.view` |
 | | — | チャネル別の受注（7チャネル） | `/orders/channels/[channel]` | ec | `ec.orders.view` |
 | | — | 手動受注取り込み（MDC／その他） | `/orders/manual/[destination]` | ec | `ec.manual_orders.import` |
 | **入出荷** | 毎日 | 入荷入力 | `/logistics/receiving` | inventory | `inventory.receiving.edit` |
 | | 毎日 | 取引一覧（進捗変更・修正） | `/logistics/transactions` | inventory | `inventory.transactions.view` / `.edit` |
-| | 毎日 | 受注残ボード（連携表示／手動表示） | `/logistics/backlog/[mode]` | ec | `ec.backlog.view` / `.import` |
 | | 月次 | 月締め（支払明細書の発行） | `/logistics/closing` | inventory | `inventory.statements.issue` |
 | **帳票** | — | 支払明細書（一覧・詳細・印刷・取り消し） | `/documents/statements`、`/documents/statements/[id]` | inventory | `inventory.statements.view`（取り消しは `.issue`） |
 | | — | 取引の CSV 出力（取引一覧からも出せる） | `/documents/transactions-export` | inventory | `inventory.transactions.view` |
@@ -185,6 +185,7 @@ URL の英語名は仮。
 | （ユーザーメニュー） | — | 権限設定 | `/settings/access` | core | superuser のみ |
 
 - 「POC環境」の注意帯は、inventory のデータを表示する画面にだけ出す。警告の地色＋墨緑の文字
+- 2026-09-17：モジュール「ダッシュボード」を先頭に追加し、受注残ボードを「入出荷」から移した（ユーザー判断。状況を見る画面を業務の入力画面と分けるため）。旧 URL `/logistics/backlog/[mode]` は `/dashboard/backlog/[mode]` へリダイレクトする
 - 「マスタ設定」という画面名は使わない（EC の旧名。仕入のマスタと紛れるため「チャネル認証情報」にする）
 
 ---
