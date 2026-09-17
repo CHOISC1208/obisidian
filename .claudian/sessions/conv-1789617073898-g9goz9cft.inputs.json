@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "conversationId": "conv-1789617073898-g9goz9cft",
+  "records": [
+    {
+      "schemaVersion": 1,
+      "id": "msg-1789617073963-xynedlz",
+      "userTurnOrdinal": 1,
+      "state": "accepted",
+      "localMessageId": "msg-1789617073894-zbo0fzz",
+      "timestamp": 1789617073894,
+      "rawDisplayText": "Profile Name\n緑茶園\nConnection Group\n\n<Default>\nInput type\n\nParameters\nLoad from Connection String\n\nBrowse Azure\n\nBrowse Fabric\nServer name*\n100.100.97.48\nPort\n14333\nTrust server certificate\n\nAuthentication type*\nSQL Login\nUser name*\nPassword*\n\nSave Password\n\nDatabase name\nSelect a database\nEncrypt\nMandatory\n\nkoreno",
+      "canonicalText": "Profile Name\n緑茶園\nConnection Group\n\n<Default>\nInput type\n\nParameters\nLoad from Connection String\n\nBrowse Azure\n\nBrowse Fabric\nServer name*\n100.100.97.48\nPort\n14333\nTrust server certificate\n\nAuthentication type*\nSQL Login\nUser name*\nPassword*\n\nSave Password\n\nDatabase name\nSelect a database\nEncrypt\nMandatory\n\nkoreno",
+      "context": {
+        "linkedContent": {
+          "path": "03_freelance/03-03_緑茶園/案件/EC Channel Console/EC Channel Console - さくらVPS（ryokuchaen）.md"
+        }
+      },
+      "images": [],
+      "contentDigest": "d628fca74af0fee09f9b26bd3f4937b2b57269db4e86c54455c6e5457e61dfcd",
+      "providerUserMessageId": "e0abf8de-8638-4514-a0b4-fe6c187f599c",
+      "providerAssistantMessageId": "987d930d-f311-4dcc-851e-e647c4ea00af"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1789617096339-vb3tz2r",
+      "userTurnOrdinal": 2,
+      "state": "accepted",
+      "localMessageId": "msg-1789617096337-y2ko1wo",
+      "timestamp": 1789617096337,
+      "rawDisplayText": "入れ方教えて",
+      "canonicalText": "入れ方教えて",
+      "images": [],
+      "contentDigest": "a82286e0d8c7e9c0255664e07c663b61d315c43c56131e8e793c0fb181e567ec",
+      "providerUserMessageId": "9edb293d-806c-4a86-bfa6-7459608aa096",
+      "providerAssistantMessageId": "9c6262a4-2c71-4b7b-8cb6-3eb81c3cfb76"
+    }
+  ]
+}

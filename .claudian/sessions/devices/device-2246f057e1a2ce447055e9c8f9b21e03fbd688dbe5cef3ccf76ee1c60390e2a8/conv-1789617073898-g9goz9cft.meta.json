@@ -1,0 +1,24 @@
+{
+  "id": "conv-1789617073898-g9goz9cft",
+  "providerId": "claude",
+  "title": "Configure SQL database connection",
+  "titleGenerationStatus": "success",
+  "createdAt": 1789617073900,
+  "lastActivityAt": 1789617105034,
+  "sessionId": "1dc2764b-0f80-4492-ad05-0203ae98152a",
+  "selectedModel": "opus",
+  "providerState": {
+    "providerSessionId": "1dc2764b-0f80-4492-ad05-0203ae98152a"
+  },
+  "linkedContentPath": "03_freelance/03-03_緑茶園/案件/EC Channel Console/EC Channel Console - さくらVPS（ryokuchaen）.md",
+  "usage": {
+    "model": "opus",
+    "inputTokens": 2,
+    "cacheCreationInputTokens": 1591,
+    "cacheReadInputTokens": 36619,
+    "contextWindow": 1000000,
+    "contextTokens": 38212,
+    "percentage": 4,
+    "contextWindowIsAuthoritative": true
+  }
+}
