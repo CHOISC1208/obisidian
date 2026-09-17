@@ -122,6 +122,40 @@ SQL Server・easyECS の設定は変えていない。
 > [!info] 直接接続ではなく DERP（東京）経由
 > `tailscale ping` の結果は `via DERP(tok)`・`direct connection not established`（17〜23ms）。先方ルーターの事情と思われる。定期同期の用途では問題ない。
 
+### 接続情報（TablePlus などから繋ぐとき）
+
+> [!warning] パスワードはここに書かない
+> 読み取り専用ログインのパスワードは、開発機の `.env.local`（`salserverpass_read`）で管理する。`sa` の認証情報は使わない前提で、Vault にも残さない。
+
+**データベース**（VPS から見た宛先）
+
+| 項目 | 値 |
+|---|---|
+| 種類 | Microsoft SQL Server（2012 Express） |
+| Host | `100.100.97.48`（`ecssv01` の Tailscale IP） |
+| Port | `14333` |
+| インスタンス | `MSSQLSERVER2`（Browser 停止中のため、指定はポート番号で行う） |
+| Database | `ecsdb_esy` |
+| User | `read`（読み取り専用。`ecsdb_esy` の `db_datareader` のみ） |
+| Password | `.env.local` の `salserverpass_read` |
+| 暗号化 | オフで接続できる（経路は SSH と Tailscale で暗号化済み） |
+
+先方社内で使われている接続文字列は `ECSSV01\MSSQLSERVER2,14333`（easyECS の接続先設定画面。2026-09-09 確認）。`ECSSV01` という名前は先方LAN内でしか引けないため、**外からは必ず IP で指定する**。
+
+**SSH（踏み台：このVPS）**
+
+| 項目 | 値 |
+|---|---|
+| Server | `160.16.209.237` |
+| Port | `22` |
+| User | `ubuntu` |
+| 鍵 | `~/.ssh/ryokuchaen_vps_new`（開発機の `~/.ssh/config` では `ryokuchaen-vps`） |
+
+TablePlus では、新規接続で Microsoft SQL Server を選び、上の「データベース」を入力したうえで **Over SSH** にチェックを入れて「SSH」の値を入れる。SSL のエラーが出たら SSL をオフ（または Trust server certificate をオン）にする。
+
+> [!caution] 本番の easyECS が使っているDB
+> `read` には書き込み権限が無いので、TablePlus でセルを編集しても保存時に拒否される。ただし**読み取りでも、大きなテーブルへの条件なしの集計・並べ替えは easyECS の受注処理を待たせることがある**。重いクエリは営業時間外に行う。
+
 ### 接続の確かめ方
 
 ```bash
