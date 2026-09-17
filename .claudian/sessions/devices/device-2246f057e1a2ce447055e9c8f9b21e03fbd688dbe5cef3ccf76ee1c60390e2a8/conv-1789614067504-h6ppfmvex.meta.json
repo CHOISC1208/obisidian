@@ -1,0 +1,23 @@
+{
+  "id": "conv-1789614067504-h6ppfmvex",
+  "providerId": "claude",
+  "title": "Retrieve SQL SERVER password",
+  "titleGenerationStatus": "success",
+  "createdAt": 1789614067510,
+  "lastActivityAt": 1789614092250,
+  "sessionId": "5c7c307d-e531-4c4b-86be-47ef90a8613d",
+  "selectedModel": "opus",
+  "providerState": {
+    "providerSessionId": "5c7c307d-e531-4c4b-86be-47ef90a8613d"
+  },
+  "usage": {
+    "model": "opus",
+    "inputTokens": 2,
+    "cacheCreationInputTokens": 322,
+    "cacheReadInputTokens": 40767,
+    "contextWindow": 1000000,
+    "contextTokens": 41091,
+    "percentage": 4,
+    "contextWindowIsAuthoritative": true
+  }
+}

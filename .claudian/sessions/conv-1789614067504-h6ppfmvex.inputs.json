@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "conversationId": "conv-1789614067504-h6ppfmvex",
+  "records": [
+    {
+      "schemaVersion": 1,
+      "id": "msg-1789614067583-vdkrd2h",
+      "userTurnOrdinal": 1,
+      "state": "accepted",
+      "localMessageId": "msg-1789614067498-41lytrf",
+      "timestamp": 1789614067498,
+      "rawDisplayText": "緑茶園の　SQLSERVERのパスワードある？",
+      "canonicalText": "緑茶園の　SQLSERVERのパスワードある？",
+      "images": [],
+      "contentDigest": "231cb5f6d364b5f10c14ddcacee72bf973c0ca30c1f66183770c5dd4f7a344a1",
+      "providerUserMessageId": "cbadc34f-6626-495b-b210-289a5526bf08",
+      "providerAssistantMessageId": "4789822f-0fcd-4cc5-a742-5e4d04484370"
+    }
+  ]
+}
