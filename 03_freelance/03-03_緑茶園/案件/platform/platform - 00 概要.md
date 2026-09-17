@@ -10,7 +10,7 @@ client: 緑茶園グループ
   - テーマ2 - グループウェアの役割再定義
 フェーズ: 調査
 created: 2026-09-14
-updated: 2026-09-16
+updated: 2026-09-17
 aliases:
   - platform
   - 統合コンソール
@@ -110,6 +110,9 @@ aliases:
 > [!info] 2026-09-16：TrustLogin（GMO）SSO の検討を開始。Supabase 側の SAML を有効化
 > ログインを TrustLogin に寄せたいという要望。持ち込まれた手順案を検証し、順番の誤り（プラン確認は前提／SAML 有効化が先）とドメイン指定が不要なことを確認した。SAML 有効化と SP 情報の確定まで済み、先方（TrustLogin 管理者）への依頼待ち。手順と依頼文は [[platform - TrustLogin SSO 導入手順]]、判断の経緯は → [[platform - 08 TrustLogin SSO 検討]]
 > - 最大の論点は**既存ユーザーの uuid が維持されるか**。権限は `auth.users.id` 基準なので、変わると superuser 権限とロール割り当てが外れる
+
+> [!success] 2026-09-17：2段階認証（TOTP）を全員に必須にした
+> 入っているデータが本格化してきたため。TrustLogin の SSO は時間がかかる見込みなので、それまでの代わりに Supabase Auth の TOTP（認証アプリ、QR で登録）を入れた。端末を無くした人は superuser が権限設定の画面から解除する（Auth 管理 API の例外を広げた）。判断の経緯 → [[platform - 05 統合方針（決定事項と設計）]] 3章
 
 - [ ] **ログインを TrustLogin（GMO）の SSO に寄せるか**。2026-09-16 に要望。既存ユーザーの uuid が維持されるか（権限の割り当てが外れないか）と、パスワードログインを残すかが未決 → [[platform - 08 TrustLogin SSO 検討]]
 - [ ] **商品の対応づけをどう持つか**。仕入商品（取引先×規格）と販売SKU（セット・箱単位）は 1:1 にならない

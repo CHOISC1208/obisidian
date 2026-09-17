@@ -25,7 +25,7 @@ aliases:
 | # | 論点 | 決定 | 対応する障害 |
 |---|---|---|---|
 | D1 | 仕入業務の行き先 | **今回は自前前提で作る**（kintone案は本統合では採らない） | [[platform - 04 移植の障害と設計判断|04]] #1 |
-| D2 | データアクセス層 | **1系統に統一する**（2026-09-15 補足：Auth 管理 API によるユーザー作成に限り secret key を1本使う → 3章） | #2 |
+| D2 | データアクセス層 | **1系統に統一する**（2026-09-15 補足：Auth 管理 API によるユーザー作成に限り secret key を1本使う → 3章。2026-09-17：2段階認証の解除にも使う） | #2 |
 | D3 | マイグレーション | **新規実装では必ず共通ルールに合わせる** | #3 |
 | D4 | 権限 | **ロール単位と個人単位で設定でき、設定画面で superuser が操作する。superuser 自体は Supabase で直接設定する** | #4 |
 | D5 | その他のアーキテクチャ | **合わせられる部分はできるだけ合わせる** | #7〜#16 |
@@ -158,6 +158,14 @@ sql/
 > - 採らなかった案：`auth.users` に SQL で直接書く（Supabase が対応していない方法で壊れやすい）／作成は今までどおり Supabase で直接行う（09-14 の決定を戻すことになる）
 > - **招待メールは使わず、初期パスワードを付けて作る**。custom SMTP を設定していないと、Supabase は Organization のメンバー以外にメールを送らないため。初期パスワードは superuser が本人に直接伝える
 
+> [!success] 2026-09-17 決定：2段階認証（TOTP）を全員に必須にする。解除も Auth 管理 API で行う
+> 入っているデータが本格化してきたため、ログインを強化する。TrustLogin の SSO（[[platform - 08 TrustLogin SSO 検討]]）は先方待ちで時間がかかる見込みなので、**それまでの代わり**として Supabase Auth の TOTP（認証アプリの6桁、QR で登録）を入れた。追加費用は無い。
+> - **確認はアプリ側で必ず行う**。Supabase の MFA は「2段階目まで済んだか」（`aal`）を記録するだけで止めない。アプリは `platform_app`（bypassrls）で DB に直結するので DB 側でも止まらない。`proxy.ts` とサーバー側のユーザー取得の両方で `aal2` を求める
+> - **端末を無くした人は superuser が権限設定の画面から解除する**。そのため Auth 管理 API の例外を「ユーザー作成」から「ユーザー作成と2段階認証の解除」に広げた（テーブルの読み書きに使わないという D2 の本旨は変えない）。採らなかった案：Supabase のダッシュボードで対応（監査ログが残らない）／リカバリーコード（supabase-js では experimental で、Auth サーバー側の有効化も要る）
+> - superuser 自身の紛失に備え、superuser は**予備の認証アプリも登録する**。予備も無いときの手順はリポジトリの `docs/mfa.md`
+> - 対象は全員（人は2名なので導入の負担が小さい）。EC 検証用ボット（Bearer）も `aal2` のトークンが要るため、このままでは使えない。`test:mock` 相当を作り直すときに判断する
+> - 全員が登録を済ませたら、Supabase の「Limit duration of AAL1 sessions」（パスワードだけのセッションを15分で切る）をオンにする
+
 ### 層の分け方
 
 | 層 | 使う場面 | 決まり |
@@ -165,7 +173,7 @@ sql/
 | Server Component | 画面の読み取り | `lib/<domain>/queries.ts` を呼ぶ |
 | Server Action | 画面からの変更 | `lib/<domain>/actions.ts`。**先頭で必ず `requirePermission()`**。複数テーブルは `withTransaction` |
 | Route Handler | **次の3つに限る**：ファイルのダウンロード（CSV出力）／大きいファイルのアップロード／スクリプトや外部からの呼び出し（`test:mock` の Bearer など） | ここでも先頭で権限を確認する |
-| supabase-js | **ログイン（Auth）専用**。例外はユーザー作成の Auth 管理 API だけ（2026-09-15） | `.from()` でテーブルを読まない |
+| supabase-js | **ログイン（Auth）専用**。例外はユーザー作成・2段階認証の解除の Auth 管理 API だけ（2026-09-15・09-17） | `.from()` でテーブルを読まない |
 
 > [!warning] CSV 取り込みをどちらで受けるかはファイルの実サイズ次第
 > Next.js の Server Actions はリクエスト本体が**既定で1MB まで**（同梱ドキュメント `server-actions.md`。`serverActions.bodySizeLimit` で変更可）。EC の取込 Route Handler は上限20MBにしているが、Vercel にデプロイすると関数のリクエスト本体の上限が別にかかる（4.5MB）。easyECS 受注CSV（3,211行）の実サイズを確認してから決める。
@@ -430,5 +438,6 @@ au PAY の中継プロキシの URL と共有シークレットは認証情報�
 - [x] ~~アプリ専用DBロールで pooler 経由の接続ができるか。Session pooler と Transaction pooler のどちらにするか~~ → **Transaction pooler（6543）で `platform_app` から接続できた**（2026-09-15 確認）
 - [ ] Supabase Auth の「新規サインアップを許可」がオフになっているか（MCP では読めない。ダッシュボードで確認）。あわせて Security Advisor が「Leaked password protection が無効」を WARN で出している（2026-09-15）
 - [x] ~~旧2リポジトリと、旧 EC Channel Console の Vercel プロジェクトをいつアーカイブするか~~ → **`multi-channel-order-fetcher`（リポジトリ・Vercelプロジェクトとも）は段階5の切り替え直後にアーカイブ・削除済み**（2026-09-15）。`ryokuchaen-inventory` リポジトリは段階3で移植済みだが、こちらはまだアーカイブしていない（判断が別途必要）
-- [ ] **SSO（TrustLogin）を入れるか。入れるならユーザー管理の持ち主はどちらか**（2026-09-16 に要望）。権限は `auth.users.id` 基準なので、SSO で新しい uuid が発行されると既存の割り当てが効かない。既存ユーザーの uuid が維持されるか・パスワードログインを残すか・検証用ボットの扱いが未決（メールドメインの指定は不要と判明） → [[platform - 08 TrustLogin SSO 検討]]
+- [x] ~~ログインをパスワードだけのままにするか~~ → **2段階認証（TOTP）を全員に必須にする**（2026-09-17 ちぇる。3章の callout）。SSO が入るまでの代わり
+- [ ] **SSO（TrustLogin）を入れるか。入れるならユーザー管理の持ち主はどちらか**（2026-09-16 に要望）。権限は `auth.users.id` 基準なので、SSO で新しい uuid が発行されると既存の割り当てが効かない。既存ユーザーの uuid が維持されるか・パスワードログインを残すか・検証用ボットの扱い・**SSO 後の TOTP の扱い**が未決（メールドメインの指定は不要と判明） → [[platform - 08 TrustLogin SSO 検討]]
 - [ ] D1 を [[Airtable再構築 - 00 概要]] にどう反映するか
