@@ -20,7 +20,7 @@ aliases:
 # platform：2リポジトリの統合コンソール化 — 事前調査
 
 親: [[00 MOC|緑茶園グループ MOC]] ／ 親論点: [[テーマ1 - 受注チャネル統合とツール複数人化]]・[[テーマ2 - グループウェアの役割再定義]]
-統合元: [[EC Channel Console - 00 概要|EC Channel Console]]（`multi-channel-order-fetcher`）／[[Airtable再構築 - 00 概要|Airtable再構築]]（`ryokuchaen-inventory`）
+統合元: [[platform - 09 受注機能（旧 EC Channel Console）|EC Channel Console]]（`multi-channel-order-fetcher`）／[[Airtable再構築 - 00 概要|Airtable再構築]]（`ryokuchaen-inventory`）
 
 > [!info] このフォルダの位置づけ
 > 2つのリポジトリを1つの統合コンソールにまとめる計画の**着手前調査**。コードは書いていない。

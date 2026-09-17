@@ -29,7 +29,7 @@ updated: 2026-09-14
 - 7モール（楽天・Amazon・Yahoo!・au PAY・Shopify・Temu・LINEギフト）の受注を公式APIで取得・表示。5チャネル実装済み・2チャネルはスタブ
 - 手動受注取り込み（MDC取り込み／その他受注取り込み、SKU対応表つき）、受注残ボード（easyECS 受注CSV → SQLビューで4軸集計）
 - チャネル認証情報は `.env` ではなく **DB の key/value テーブル**に保存。読み戻さない
-- au PAY は送信元IP制限をさくらVPSの中継プロキシで回避（[[EC Channel Console - さくらVPS（ryokuchaen）]]）
+- au PAY は送信元IP制限をさくらVPSの中継プロキシで回避（[[さくらVPS（ryokuchaen）]]）
 - ドキュメントの分担ルールが CLAUDE.md にある（システム仕様＝README、判断の経緯＝vault）
 
 ## アーキテクチャ

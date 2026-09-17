@@ -35,7 +35,7 @@ aliases:
 
 | | 案A：kintone | 案B：自前（Vercel／Supabase／Next.js） |
 | --- | --- | --- |
-| 本体ライセンス | **既に契約済み**（質問トラッカーが `ryokucyaen.cybozu.com` で稼働中）＝追加費用なし | Supabase Pro＋Vercel Pro で月6〜7千円。既存 [[EC Channel Console - 00 概要]] のインフラに相乗りできれば限界費用はほぼゼロ |
+| 本体ライセンス | **既に契約済み**（質問トラッカーが `ryokucyaen.cybozu.com` で稼働中）＝追加費用なし | Supabase Pro＋Vercel Pro で月6〜7千円。既存 [[platform - 09 受注機能（旧 EC Channel Console）]] のインフラに相乗りできれば限界費用はほぼゼロ |
 | 帳票 | **プラグインが必須**（下表参照）。買い切りなら20万円、サブスクなら月8,333〜20,000円 | 自前実装（PDFライブラリ）。追加費用なし・工数はかかる |
 | データ構造 | 13アプリで素直に載る | 13テーブル |
 | 商品の一意性 | 「商品タイトル」フィールド＋重複禁止で担保（現行運用のまま） | 9列の複合ユニーク制約 |
@@ -143,5 +143,5 @@ aliases:
 - [[03 業務フローとツール状況]] — STEP2「入荷・在庫」の現状記述
 - [[09 初回すり合わせ論点]] — 論点3「Airtable／kintone／Excelの役割分担」
 - [[08 要確認事項]] — 本案件から発生した確認事項の集約先
-- [[EC Channel Console - 00 概要]] — 案Bで流用予定のNext.js＋Supabase構成
+- [[platform - 09 受注機能（旧 EC Channel Console）]] — 案Bで流用予定のNext.js＋Supabase構成
 - [[platform - 00 概要]] — 本案件の仕入アプリと EC Channel Console をまとめる統合コンソール（2026-09-14〜）

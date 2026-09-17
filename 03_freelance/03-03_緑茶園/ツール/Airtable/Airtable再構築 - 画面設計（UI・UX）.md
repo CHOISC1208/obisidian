@@ -116,4 +116,4 @@ POC期間のみ　データ品質（migration_issues）
 - [[Airtable再構築 - 要件定義ドラフト]] — M3（コア機能開発）・M6（帳票）
 - [[Airtable再構築 - ヒアリング回答ログ]] — Q1・Q5・Q6
 - [[株式会社KRK]]
-- [[EC Channel Console - 00 概要]] — 同じ構成（Next.js＋Supabase Auth）
+- [[platform - 09 受注機能（旧 EC Channel Console）]] — 同じ構成（Next.js＋Supabase Auth）

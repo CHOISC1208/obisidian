@@ -96,7 +96,7 @@
 |---|---|---|
 | `~/git/04_ryokuuchaen/ryokuchaen-platform` | [[03_freelance/03-03_緑茶園/案件/platform/platform - 00 概要\|platform（統合コンソール）]] | 緑茶園グループ向けの統合コンソール。下の EC Channel Console と仕入アプリを1つにまとめる統合先。設計方針・決定事項は `platform - 05`、デザインは `platform - 06` が正本。段階の進捗・決定事項の前提が変わったら `platform - 00`・`05` を、仕入や受注の画面・制約が変わったら各案件ノートを更新する（対応表はリポジトリの `CLAUDE.md`） |
 | `~/git/04_ryokuuchaen/ryokuchaen-inventory` | [[03_freelance/03-03_緑茶園/ツール/Airtable/Airtable再構築 - 00 概要\|Airtable再構築]] | 生産者仕入業務の POC アプリと Airtable 抽出スクリプト（`inventory` スキーマ）。platform への移植元で、移植後は凍結する。スキーマ・画面が変わったら `Airtable再構築 - DBスキーマ定義`・`Supabase実装（inventoryスキーマ）`・`画面設計（UI・UX）` を更新する |
-| `~/git/multi-channel-order-fetcher` | [[03_freelance/03-03_緑茶園/案件/EC Channel Console/EC Channel Console - 00 概要\|EC Channel Console]] | 緑茶園グループ向けに開発中の受注取得ツール（EC Channel Console）。実装状況・制約が変わったら、この Vault の該当ノートと `04 ツールリファレンス` の状態タグ、`テーマ1` の比較表を更新する |
+| ~~`~/git/multi-channel-order-fetcher`~~（2026-09-15 platform に統合・GitHub でアーカイブ、2026-09-17 ローカル削除） | [[03_freelance/03-03_緑茶園/案件/platform/platform - 09 受注機能（旧 EC Channel Console）\|受注機能（旧 EC Channel Console）]] | 旧 EC Channel Console。今は `ryokuchaen-platform` の受注（EC）機能。ノートの更新ルールは platform の行に従う |
 | `~/git/k-tec_spo_simple` | [[03_freelance/03-02_ケーテック/案件/社内申請ポータル/申請ポータル - 00 概要\|社内申請ポータル]] | ケーテック株式会社向けに構築中の社内申請ポータル（SPO + Lists + Power Automate + SPFx）。列定義・承認方式・デプロイ経路が変わったら、この Vault の該当APPノートと `申請ポータル - アーキテクチャ全体像`、`06 リポジトリ内ドキュメントの現状差分` を更新する |
 | `~/git/req-navi` | [[03_freelance/03-02_ケーテック/ツール/Req Navi（ヒアリング支援・自社）\|Req Navi]] | 自社のAIヒアリングSaaS。クライアント案件ではなくヒアリングの実施基盤として使っている（ケーテックの 2026-08-17 ヒアリング回答の一次記録がここにある） |
 

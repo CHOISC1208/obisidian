@@ -471,7 +471,7 @@ where p.species_id is null
 3. **商品2,894件を移行**し、`unique nulls not distinct` が通るか確認する。弾かれたら重複の実物を見て判断する
 4. **原価履歴・取引・支払明細書を移行**し、`v_products_needing_review` で未整備データを一覧する
 5. **価格ロジックを実装**する（取引日時点で有効な原価を引いて単価に転記。現行Airtableのスクリプトは入手済みで、日付範囲検索をそのまま移植できる）
-6. **CRUD画面を構築**する。既存の [[EC Channel Console - 00 概要|EC Channel Console]] と同じNext.js＋Supabase構成を流用する
+6. **CRUD画面を構築**する。既存の [[platform - 09 受注機能（旧 EC Channel Console）|EC Channel Console]] と同じNext.js＋Supabase構成を流用する
 7. **支払明細書のPDF生成**を実装する
 
 > [!warning] UIの実装コストを見誤らないこと
@@ -513,4 +513,4 @@ Base ID: `appgHXd85EhNBuXlt`（【現行】入荷記録表）
 - [[Airtable再構築 - データモデル設計比較]] — 現行の何が問題かのAS-IS分析
 - [[Airtable再構築 - ヒアリング回答ログ]] — 設計判断の根拠となった回答の原文
 - [[08 要確認事項]] — 未決事項の集約先
-- [[EC Channel Console - 00 概要]] — 流用するNext.js＋Supabase構成
+- [[platform - 09 受注機能（旧 EC Channel Console）]] — 流用するNext.js＋Supabase構成

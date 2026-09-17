@@ -30,7 +30,7 @@ aliases:
 |---|---|
 | リポジトリ | `04_ryokuuchaen/ryokuchaen-inventory` |
 | Supabaseプロジェクト | `ryokuchaen`（ref `tphdmbhufxcpdifxxvzl`、東京リージョン、PostgreSQL 17） |
-| スキーマ | `inventory`。`public` は [[EC Channel Console - 00 概要|EC Channel Console]] が使用中のため分離 |
+| スキーマ | `inventory`。`public` は [[platform - 09 受注機能（旧 EC Channel Console）|EC Channel Console]] が使用中のため分離 |
 | 抽出スクリプト | `npm run extract:airtable`（Airtableは読み取り専用・DB投入は1トランザクション・**実行のたびに全件を消して入れ直す**） |
 
 > [!info] 差分更新から全件入れ直しに変更（2026-09-13）
@@ -134,7 +134,7 @@ INFO で出すが、これは意図した状態で、`service_role` 以外から
 > [!success] CRITICAL 5件は対応済み（2026-09-13）
 > `public.v_backlog_by_sku` / `v_backlog_by_date` / `v_backlog_by_jun` /
 > `v_backlog_overdue` / `v_manual_order_lines_current` の5ビューが SECURITY DEFINER だった。
-> **本案件の成果物ではなく [[EC Channel Console - 00 概要]] 側の資産**だが、あわせて是正した。
+> **本案件の成果物ではなく [[platform - 09 受注機能（旧 EC Channel Console）]] 側の資産**だが、あわせて是正した。
 >
 > これらを読むのは `lib/backlog/store.ts`・`lib/manual-orders/store.ts`・
 > `app/api/manual-orders/[destination]/sku-map/route.ts` の3ファイルだけで、いずれも
@@ -197,7 +197,7 @@ INFO で出すが、これは意図した状態で、`service_role` 以外から
 - [ ] 支払明細書PDF（80件）の Supabase Storage への移送
 - [ ] `marketplace_codes` に入れる外部モールコードの取得元を crossmall 側に確認
 - [ ] アプリから読ませる段階で `inventory` のRLSポリシーを設計する
-- [x] ~~（別案件）`public` の SECURITY DEFINER ビュー5本の是正~~ → **2026-09-13 完了**（[[EC Channel Console - 00 概要]]）
+- [x] ~~（別案件）`public` の SECURITY DEFINER ビュー5本の是正~~ → **2026-09-13 完了**（[[platform - 09 受注機能（旧 EC Channel Console）]]）
 - [ ] 漏洩パスワード保護を有効にする（ダッシュボードの Authentication で切り替え）
 
 ## 関連ノート
@@ -206,5 +206,5 @@ INFO で出すが、これは意図した状態で、`service_role` 以外から
 - [[Airtable再構築 - DBスキーマ定義]] — 本書が実装した設計の本体
 - [[Airtable再構築 - データモデル設計比較]] — 現行の何が問題かのAS-IS分析
 - [[Airtable再構築 - ヒアリング回答ログ]] — 設計判断の根拠
-- [[EC Channel Console - 00 概要]] — 同じSupabaseプロジェクトの `public` を使う別案件
+- [[platform - 09 受注機能（旧 EC Channel Console）]] — 同じSupabaseプロジェクトの `public` を使う別案件
 - [[08 要確認事項]] — 未決事項の集約先
