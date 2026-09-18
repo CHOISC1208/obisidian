@@ -7,7 +7,7 @@ tags:
   - 決定事項
 client: 緑茶園グループ
 created: 2026-09-14
-updated: 2026-09-17
+updated: 2026-09-19
 版: v2
 aliases:
   - 統合コンソール デザイン指示書
@@ -188,6 +188,10 @@ URL の英語名は仮。
 |---|---|---|---|---|---|
 | （ホーム） | — | 権限のある業務の要約（今日の入荷・月締め待ち・要確認、チャネルの接続状態） | `/` | inventory・ec | 各画面の閲覧権限 |
 | **ダッシュボード** | 受注残 | 受注残ボード（easyECS 連携。2026-09-17 に手動表示〔CSV〕は画面から外した） | `/dashboard/backlog/live` | ec | `ec.backlog.view` / `.import` |
+| | 売上 | 経営サマリー（前年との比較・年別の推移） | `/dashboard/sales/summary` | ec | `ec.sales.view` |
+| | 売上 | 商品・モール（売れ筋・ストアごとの平均単価・新規／リピーター別） | `/dashboard/sales/products` | ec | `ec.sales.view` |
+| | 売上 | 季節・予約進捗 | `/dashboard/sales/season` | ec | `ec.sales.view` |
+| | 売上 | 分析（伸びた理由・トレンド・品目の位置づけ・併売） | `/dashboard/sales/analysis` | ec | `ec.sales.view` |
 | **受注** | — | 受注の概要（チャネルの接続状態） | `/orders` | ec | `ec.orders.view` |
 | | — | チャネル別の受注（7チャネル） | `/orders/channels/[channel]` | ec | `ec.orders.view` |
 | | — | 手動受注取り込み（MDC／その他） | `/orders/manual/[destination]` | ec | `ec.manual_orders.import` |
@@ -201,12 +205,14 @@ URL の英語名は仮。
 | | 商品・取引先 | 商品・原価（サイドピークで編集） | `/masters/products` | inventory | `inventory.masters.edit` |
 | | 商品・取引先 | 規格マスタ | `/masters/specs` | inventory | `inventory.masters.edit` |
 | | 受注連携 | SKU対応表（MDC／その他） | `/masters/sku-map/[destination]` | ec | `ec.manual_orders.import` |
+| | 受注連携 | 売上の品目分類（SKU の頭の文字 → 品目） | `/masters/sku-categories` | ec | 閲覧 `ec.sales.view`／編集 `ec.sales.categories.edit` |
 | | 受注連携 | チャネル認証情報 | `/masters/channel-credentials` | ec | `ec.credentials.edit` |
 | | POC期間のみ | データ品質 | `/masters/quality` | inventory | `inventory.masters.edit` |
 | （ユーザーメニュー） | — | 権限設定 | `/settings/access` | core | superuser のみ |
 
 - 「POC環境」の注意帯は、inventory のデータを表示する画面にだけ出す。警告の地色＋墨緑の文字
 - 2026-09-17：モジュール「ダッシュボード」を先頭に追加し、受注残ボードを「入出荷」から移した（ユーザー判断。状況を見る画面を業務の入力画面と分けるため）。旧 URL `/logistics/backlog/[mode]` は `/dashboard/backlog/[mode]` へリダイレクトする
+- 2026-09-17〜18：ダッシュボードに「売上」のグループ（easyECS の受注履歴を読む4画面）と、マスタに「売上の品目分類」を追加した。売上の実数を見せる相手を限るため、`ec.sales.view` は初期ロールに入れず個人に許可する（[[easyECS - 00 概要]]）。表への追記は 2026-09-19（画面の追加時に漏れていた）
 - 「マスタ設定」という画面名は使わない（EC の旧名。仕入のマスタと紛れるため「チャネル認証情報」にする）
 
 ---
@@ -394,6 +400,7 @@ App Shell（ヘッダー＋サイドバー）のデザインを実装してく�
 | v1 | 2026-09-14 | 初版（ちぇる作成） |
 | v2 | 2026-09-14 | [[platform - 07 デザイン指示書レビュー]] の指摘と決定を反映（下表） |
 | v2.1 | 2026-09-17 | 2.3 グラフの系列の色を追加（売上ダッシュボードの品目別の積み上げグラフのため。ちぇる承認） |
+| v2.2 | 2026-09-19 | 4.3 に売上ダッシュボード（経営サマリー・商品・モール・季節・予約進捗・分析）と売上の品目分類を追記（ユーザーの指示。画面を追加したときに表への追記が漏れていた） |
 
 ### v1 → v2 の変更点
 
