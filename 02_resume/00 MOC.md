@@ -33,4 +33,4 @@ updated: 2026-09-16
 
 - Notion `01_resume`（[https://app.notion.com/p/01_resume-29ef4e3e47b1805190b5f55caec3309a](https://app.notion.com/p/01_resume-29ef4e3e47b1805190b5f55caec3309a)）— 職務経歴・取り組み内容・受賞歴の出典。2026-09-15移植。以後の更新は本Vault側を正本とし、Notion側は更新しない想定。
 - 人事評価（MAP2 目標管理・評価シート）2011〜2025年度 — 2026-09-16に `AGC株式会社/` へ格納。
-- 進行中3案件（[[03_freelance/03-01_greenearth/00-ダッシュボード|GreenEarth]]・[[03_freelance/03-02_ケーテック/00 MOC|ケーテック株式会社]]・[[03_freelance/03-03_緑茶園/00 MOC|緑茶園グループ]]）は各クライアントフォルダが一次情報源。案件の進捗・決定事項が変わったらそちらを先に更新し、こちらへ反映する。
+- 進行中3案件（[[03_freelance/03-01_greenearth/00 MOC|GreenEarth]]・[[03_freelance/03-02_ケーテック/00 MOC|ケーテック株式会社]]・[[03_freelance/03-03_緑茶園/00 MOC|緑茶園グループ]]）は各クライアントフォルダが一次情報源。案件の進捗・決定事項が変わったらそちらを先に更新し、こちらへ反映する。
