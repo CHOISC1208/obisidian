@@ -5,6 +5,7 @@ tags:
   - Airtable
   - UI設計
 client: 緑茶園グループ
+層: 機能
 created: 2026-09-13
 updated: 2026-09-16
 aliases:

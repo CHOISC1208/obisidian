@@ -7,6 +7,7 @@ tags:
   - Supabase
   - 認証
 client: 緑茶園グループ
+層: 基盤
 created: 2026-09-14
 updated: 2026-09-17
 ---

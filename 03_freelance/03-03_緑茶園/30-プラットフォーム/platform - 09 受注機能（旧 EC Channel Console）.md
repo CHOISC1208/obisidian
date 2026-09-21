@@ -8,6 +8,7 @@ tags:
 client: 緑茶園グループ
 親論点: テーマ1 - 受注チャネル統合とツール複数人化
 フェーズ: platformに統合済み
+層: 機能
 created: 2026-09-04
 updated: 2026-09-17
 aliases:

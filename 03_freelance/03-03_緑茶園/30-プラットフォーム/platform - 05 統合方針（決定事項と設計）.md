@@ -6,6 +6,7 @@ tags:
   - 設計方針
   - 決定事項
 client: 緑茶園グループ
+層: 設計
 created: 2026-09-14
 updated: 2026-09-17
 aliases:

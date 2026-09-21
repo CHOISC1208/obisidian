@@ -5,6 +5,7 @@ tags:
   - Airtable
 client: 緑茶園グループ
 親論点: テーマ2 - グループウェアの役割再定義
+層: 機能
 created: 2026-09-05
 updated: 2026-09-15
 aliases:

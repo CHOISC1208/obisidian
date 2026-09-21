@@ -7,6 +7,7 @@ tags:
   - スキーマ定義
   - 実装
 client: 緑茶園グループ
+層: 機能
 created: 2026-09-12
 updated: 2026-09-14
 aliases:

@@ -6,6 +6,7 @@ tags:
   - データモデル
   - スキーマ定義
 client: 緑茶園グループ
+層: 機能
 created: 2026-09-11
 updated: 2026-09-14
 aliases:
