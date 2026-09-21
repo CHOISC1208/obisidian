@@ -136,6 +136,6 @@ ssh ubuntu@tk2-246-32983.vs.sakura.ne.jp
 - [[platform - 09 受注機能（旧 EC Channel Console）]] — au PAYマーケットのIP制限と、その解決の経緯
 - [[platform - 10 変換器構想とMDC出力]] — Tailscale＋VPS経由で easyECS の SQL Server を読む構想（2026-09-17 経路開通）
 - [[easyECS - 00 概要]] — Tailscale で繋いでいる easyECS の DB（接続方法・DB構造）
-- [[08 要確認事項]] — SQL Server 2012 のサポート終了・テーブル定義書・負荷の許容など、先方に確認が残っている事項
+- [[_未確定事項]] — SQL Server 2012 のサポート終了・テーブル定義書・負荷の許容など、先方に確認が残っている事項
 - [[各モール API認証情報の取得手順]] — 先方に渡す配布用資料。IP登録の説明はこちら
 - [[クロスモール（I'LL社）]] — 一元管理SaaS各社も固定IPを確保している、という判断根拠

@@ -17,7 +17,7 @@ aliases:
 
 # TrustLogin SSO 導入手順
 
-親: [[platform - 08 TrustLogin SSO 検討]] ／ 確認事項: [[08 要確認事項]]
+親: [[platform - 08 TrustLogin SSO 検討]] ／ 確認事項: [[_未確定事項]]
 
 > [!info] このノートの位置づけ
 > TrustLogin SSO の**手順一式**。先方に渡す値と依頼文（[[各モール API認証情報の取得手順]] と同じくクライアント配布用のため値を正確に保つ）と、こちら側の実装・検証手順をまとめる。
