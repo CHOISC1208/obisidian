@@ -16,7 +16,7 @@ aliases:
 
 # easyECS — DB接続（Tailscale・SQL Server）
 
-親: [[easyECS - 00 概要]] ／ 関連: [[さくらVPS（ryokuchaen）]]
+親: [[easyECS - 00 概要]] ／ 関連: [[05 さくらVPS（固定IP経由の踏み台）]]
 
 > [!warning] 認証情報はこのノートに書かない
 > 読み取り専用ログインのパスワードは開発機の `.env.local`（`sqlserverid_read`／`salserverpass_read`。同期ジョブ用に同じ値を `EASYECS_SQL_USER`／`EASYECS_SQL_PASSWORD` でも持つ）で管理する。VPS には同期ジョブの設定ファイル（権限 600）として送っている。`sa` の認証情報は使わない前提で、Vault にも残さない。
@@ -34,7 +34,7 @@ flowchart LR
 
 - **SQL Server に届くのは VPS だけ。** 先方PCのファイアウォールで、許可元を VPS の Tailscale アドレスに限定している
 - 開発機は Tailscale に参加していない。VPS を踏み台にした SSH トンネルで繋ぐ
-- **受注残の同期ジョブは VPS 上で動いている**（2026-09-17〜、cron で15分ごと、`read` ログインで読む）。Vercel からは直接行かない（[[platform - 10 変換器構想とMDC出力]] の判断）。Supabase・Vercel まで含めた全体の構成図は [[さくらVPS（ryokuchaen）]] の「全体構成」
+- **受注残の同期ジョブは VPS 上で動いている**（2026-09-17〜、cron で15分ごと、`read` ログインで読む）。Vercel からは直接行かない（[[変換器構想とMDC出力]] の判断）。Supabase・Vercel まで含めた全体の構成図は [[05 さくらVPS（固定IP経由の踏み台）]] の「全体構成」
 
 ## Tailscale
 
@@ -218,5 +218,5 @@ Tailscale は「しばらく使わない」ことでは切れない。切れる�
 ## 関連
 
 - [[easyECS - 00 概要]] ／ [[easyECS - 02 DB構造（ecsdb_esy）]] ／ [[easyECS - 03 受注テーブル（t_sell系）]]
-- [[さくらVPS（ryokuchaen）]] — 踏み台・同期ジョブを載せるサーバ
-- [[platform - 10 変換器構想とMDC出力]] — VPS中継＋Supabase同期という方針の経緯
+- [[05 さくらVPS（固定IP経由の踏み台）]] — 踏み台・同期ジョブを載せるサーバ
+- [[変換器構想とMDC出力]] — VPS中継＋Supabase同期という方針の経緯

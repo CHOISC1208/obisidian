@@ -18,7 +18,7 @@ aliases:
 
 > [!info] このノートの位置づけ
 > Amazon の受注を API でどこまで取れるかを整理した**調査ノート**（調査日 2026-09-16、出典は本文中のリンク）。
-> 用途は [[platform - 00 概要|統合コンソール（ryokuchaen-platform）]] の EC 機能（旧 [[platform - 09 受注機能（旧 EC Channel Console）|EC Channel Console]]。2026-09-15 に platform へ移行済み）の受注取り込み設計と、PowerAutomate 置換（Amazon純正フォーマットCSV出力、→ [[platform - 10 変換器構想とMDC出力]]）の実現可否の判断。
+> 用途は [[platform - 00 概要|統合コンソール（ryokuchaen-platform）]] の EC 機能（旧 [[受注機能（旧 EC Channel Console）|EC Channel Console]]。2026-09-15 に platform へ移行済み）の受注取り込み設計と、PowerAutomate 置換（Amazon純正フォーマットCSV出力、→ [[変換器構想とMDC出力]]）の実現可否の判断。
 > 緑茶園にとっての含意と、現行実装との突き合わせは冒頭の「緑茶園・統合コンソールへの含意」にまとめた。§1 以降は緑茶園に依存しない API 仕様の整理。
 >
 > **対象環境**：Amazon.co.jp（MarketplaceId `A1VC38T7YXB528`）／ SP-APIリージョン `fe`（極東）／ LWA リフレッシュトークン認証
@@ -219,7 +219,7 @@ RDTなしでは操作自体が 403 となり、`getOrder` レスポンス内の�
 | 2年以上前の注文 | **API応答に出ない** | 注文レポート（過去分はCSV取り込みで補完） |
 
 > [!tip] 緑茶園の文脈では
-> 送り状番号のモール返却は easyECS の「出口」側の価値（→ [[platform - 09 受注機能（旧 EC Channel Console）]]）。統合コンソールが担うのは入口なので、confirmShipment / Feeds API は当面スコープ外。
+> 送り状番号のモール返却は easyECS の「出口」側の価値（→ [[受注機能（旧 EC Channel Console）]]）。統合コンソールが担うのは入口なので、confirmShipment / Feeds API は当面スコープ外。
 
 ---
 
@@ -309,10 +309,10 @@ v0 は **非推奨（deprecated）**。廃止日は公式に明示されてい�
 
 ## 関連ノート
 
-- [[platform - 09 受注機能（旧 EC Channel Console）]] — Amazon を含む7チャネルの実装状況（移行前の案件ノート）
+- [[受注機能（旧 EC Channel Console）]] — Amazon を含む7チャネルの実装状況（移行前の案件ノート）
 - [[platform - 00 概要]] — 移行先の統合コンソール
 - [[各モール API認証情報の取得手順]] — `AMAZON_LWA_APP_ID` 等の取得手順（先方配布用）
-- [[platform - 10 変換器構想とMDC出力]] — PowerAutomate置換（純正フォーマットCSV出力）の構想
+- [[変換器構想とMDC出力]] — PowerAutomate置換（純正フォーマットCSV出力）の構想
 - [[クロスモール（I'LL社）]] — クロスモールは Amazon を注文レポートの定期ダウンロードで取得している（API直呼びとの対比）
 - [[Temu - Open Platform 受注リファレンス]] — 同じ形式で整理した Temu 版（PIIの扱いを対比）
 - [[LINEギフト - API 受注リファレンス]] — 同じ形式で整理した LINEギフト 版

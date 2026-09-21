@@ -18,10 +18,10 @@ aliases:
 
 # さくらのVPS `ryokuchaen`（固定IP中継サーバ）
 
-親: [[platform - 09 受注機能（旧 EC Channel Console）]] ／ 関連: [[easyECS - 01 DB接続（Tailscale・SQL Server）]] ／ 親論点: [[テーマ1 - 受注チャネル統合とツール複数人化]]
+親: [[受注機能（旧 EC Channel Console）]] ／ 関連: [[easyECS - 01 DB接続（Tailscale・SQL Server）]] ／ 親論点: [[テーマ1 - 受注チャネル統合とツール複数人化]]
 
 > [!info] このノートの位置づけ
-> [[platform - 09 受注機能（旧 EC Channel Console）|EC Channel Console]] のために契約した**固定IPのサーバ1台**についての、契約情報・入り方・運用メモ。
+> [[受注機能（旧 EC Channel Console）|EC Channel Console]] のために契約した**固定IPのサーバ1台**についての、契約情報・入り方・運用メモ。
 >
 > **サーバ上で動いているものの実装仕様（Caddyの設定・環境変数・切り分け手順）はリポジトリ側が正本** → `~/git/multi-channel-order-fetcher/docs/credentials.md`「中継プロキシ経由で使う場合」〔当時。リポジトリはアーカイブ済みで、今の正本は `ryokuchaen-platform` と VPS 側の `ryokuchaen_sakuravps` リポジトリ〕。このノートが持つのは**サーバそのもの**（契約・ログイン・OS・役割）だけ。二重管理にしない。
 >
@@ -54,19 +54,19 @@ flowchart LR
 
 | 置き場所 | 持っているもの |
 |---|---|
-| easyECS（`ECSSV01`） | 受注の正本。こちらからは**読むだけ**（書き込みは MDC 形式CSVの取込に限る。[[platform - 10 変換器構想とMDC出力]]） |
+| easyECS（`ECSSV01`） | 受注の正本。こちらからは**読むだけ**（書き込みは MDC 形式CSVの取込に限る。[[変換器構想とMDC出力]]） |
 | さくらVPS | 同期ジョブのプログラム・接続設定（権限 600）・実行ログ（店舗ごとの件数の合計だけ。受注番号などは残さない）。**受注データそのものは置かない** |
 | Supabase | 取り込んだ受注残の明細。連携分は最新5回分だけ残す |
 | Vercel | 何も持たない（画面を出すたびに Supabase を読む） |
 
-- **なぜ Vercel から easyECS を直接読まないか**（届かない・easyECS に負荷をかける・PC が止まると画面も止まる）は [[platform - 10 変換器構想とMDC出力]] の「2026-09-17：VPS中継＋Supabase同期を確定」
+- **なぜ Vercel から easyECS を直接読まないか**（届かない・easyECS に負荷をかける・PC が止まると画面も止まる）は [[変換器構想とMDC出力]] の「2026-09-17：VPS中継＋Supabase同期を確定」
 - 実装の正本：ジョブ本体と画面は `ryokuchaen-platform` の `docs/easyecs-backlog-sync.md`、サーバへの配置・cron・Node.js は `ryokuchaen_sakuravps` の `docs/runbook.md`「5. easyECS 受注残の同期ジョブ」
 - 経路（Tailscale・先方PCの設定・ログイン）は [[easyECS - 01 DB接続（Tailscale・SQL Server）]]
 
 | 役割 | 状態 | 詳細 |
 |---|---|---|
-| **au PAYマーケット中継プロキシ**（Caddy＋シークレットヘッダー認証＋Let's Encrypt自動HTTPS） | 🟢 **稼働中**。2026-09-09 に本番デプロイから実データ62件の取得を確認 | → [[platform - 09 受注機能（旧 EC Channel Console）]]「au PAYマーケットのIP制限」 |
-| **easyECS の SQL Server から読み取り、Supabaseへ同期する定期ジョブ** | 🟢 **稼働中（2026-09-17〜）**。cron で15分ごと。19:45 の自動実行で保存まで確認。Node.js はユーザー領域（`~/.local/node`）に置いた。配置・更新の手順は `ryokuchaen_sakuravps` リポジトリの runbook「5. easyECS 受注残の同期ジョブ」 | → [[platform - 10 変換器構想とMDC出力]] |
+| **au PAYマーケット中継プロキシ**（Caddy＋シークレットヘッダー認証＋Let's Encrypt自動HTTPS） | 🟢 **稼働中**。2026-09-09 に本番デプロイから実データ62件の取得を確認 | → [[受注機能（旧 EC Channel Console）]]「au PAYマーケットのIP制限」 |
+| **easyECS の SQL Server から読み取り、Supabaseへ同期する定期ジョブ** | 🟢 **稼働中（2026-09-17〜）**。cron で15分ごと。19:45 の自動実行で保存まで確認。Node.js はユーザー領域（`~/.local/node`）に置いた。配置・更新の手順は `ryokuchaen_sakuravps` リポジトリの runbook「5. easyECS 受注残の同期ジョブ」 | → [[変換器構想とMDC出力]] |
 
 > [!note] 2026-09-12 時点の記述（履歴として残す）
 > VPS側には Tailscale を導入済み。**繋ぐ相手側（`ECSSV01`）が未対応**なので、SQL Server 側の役割はまだ動いていない。
@@ -91,7 +91,7 @@ flowchart LR
 | サービスコード | `113802134330` |
 | 管理ユーザー名 | `ubuntu` |
 
-**このIPv4アドレスが、先方のWow!managerに登録してもらった値**（クロスモール側の8個のIPに追記する形。上書きではない）。サーバを再契約・移設するとIPが変わり、au PAYの受注取得が止まる。→ [[platform - 09 受注機能（旧 EC Channel Console）]]
+**このIPv4アドレスが、先方のWow!managerに登録してもらった値**（クロスモール側の8個のIPに追記する形。上書きではない）。サーバを再契約・移設するとIPが変わり、au PAYの受注取得が止まる。→ [[受注機能（旧 EC Channel Console）]]
 
 ## ログイン
 
@@ -133,8 +133,8 @@ ssh ubuntu@tk2-246-32983.vs.sakura.ne.jp
 
 ## 関連
 
-- [[platform - 09 受注機能（旧 EC Channel Console）]] — au PAYマーケットのIP制限と、その解決の経緯
-- [[platform - 10 変換器構想とMDC出力]] — Tailscale＋VPS経由で easyECS の SQL Server を読む構想（2026-09-17 経路開通）
+- [[受注機能（旧 EC Channel Console）]] — au PAYマーケットのIP制限と、その解決の経緯
+- [[変換器構想とMDC出力]] — Tailscale＋VPS経由で easyECS の SQL Server を読む構想（2026-09-17 経路開通）
 - [[easyECS - 00 概要]] — Tailscale で繋いでいる easyECS の DB（接続方法・DB構造）
 - [[_未確定事項]] — SQL Server 2012 のサポート終了・テーブル定義書・負荷の許容など、先方に確認が残っている事項
 - [[各モール API認証情報の取得手順]] — 先方に渡す配布用資料。IP登録の説明はこちら

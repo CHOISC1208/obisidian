@@ -306,7 +306,7 @@ TEMUのAPI利用は「アプリ開発者としてTEMUのPartner Platformに登�
 
 - [[platform - 00 概要]] — 接続先の統合コンソール
 - [[Amazon - SP-API 受注リファレンス]] ／ [[Temu - Open Platform 受注リファレンス]] ／ [[LINEギフト - API 受注リファレンス]] — 開発者向けの詳細
-- [[さくらVPS（ryokuchaen）]] — au PAYマーケット用の中継サーバ
-- [[platform - 09 受注機能（旧 EC Channel Console）]] — 旧ツール（移行前）の経緯
+- [[05 さくらVPS（固定IP経由の踏み台）]] — au PAYマーケット用の中継サーバ
+- [[受注機能（旧 EC Channel Console）]] — 旧ツール（移行前）の経緯
 - [[04 ツールリファレンス]]
 - [[クロスモール（I'LL社）]] — 各チャネルの連携方式・au PAYの固定IP・LINEギフト仕様の一次情報
