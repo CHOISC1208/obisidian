@@ -67,7 +67,7 @@ aliases:
 | [[platform - 07 デザイン指示書レビュー]]           | 指示書の検算（HSL と HEX のずれ、Tailwind v4 での書き方）、コントラスト検証、05 とのレイアウトの突き合わせ、既存コードとの差                                 |
 | [[platform - 08 TrustLogin SSO 検討]]     | **2026-09-16**：TrustLogin（GMO）経由のログインを足したいという要望。手順案の検証結果と、ユーザー管理の持ち主をどちらにするかの未決事項                          |
 | [[platform - 11 商品ポートフォリオの運用サイクル（PPM）]] | **2026-09-19**：PPM を「分類して終わり」でなく運用サイクル（戦略割り当て→バランス診断→ラインナップ→遷移の追跡）にしたいという構想と、売上ダッシュボードの受注履歴でどこまでできるかの試算    |
-| [[platform - TrustLogin SSO 導入手順]]      | SSO 導入の手順一式。先方に渡す SP 情報と依頼文、`supabase sso add` 以降のこちらの作業、切り替え前の検証                                          |
+| [[platform - 08a TrustLogin SSO 導入手順]]      | SSO 導入の手順一式。先方に渡す SP 情報と依頼文、`supabase sso add` 以降のこちらの作業、切り替え前の検証                                          |
 
 ## 着手前に決めること
 
@@ -109,7 +109,7 @@ aliases:
 > - 残作業：`ec._archived_multi_channel_order_fetcher_logs`（旧エラーログの控え）は運用が安定してから drop する。EC検証用ボットの権限適用は `test:mock` 相当の検証を作り直すときに判断する
 
 > [!info] 2026-09-16：TrustLogin（GMO）SSO の検討を開始。Supabase 側の SAML を有効化
-> ログインを TrustLogin に寄せたいという要望。持ち込まれた手順案を検証し、順番の誤り（プラン確認は前提／SAML 有効化が先）とドメイン指定が不要なことを確認した。SAML 有効化と SP 情報の確定まで済み、先方（TrustLogin 管理者）への依頼待ち。手順と依頼文は [[platform - TrustLogin SSO 導入手順]]、判断の経緯は → [[platform - 08 TrustLogin SSO 検討]]
+> ログインを TrustLogin に寄せたいという要望。持ち込まれた手順案を検証し、順番の誤り（プラン確認は前提／SAML 有効化が先）とドメイン指定が不要なことを確認した。SAML 有効化と SP 情報の確定まで済み、先方（TrustLogin 管理者）への依頼待ち。手順と依頼文は [[platform - 08a TrustLogin SSO 導入手順]]、判断の経緯は → [[platform - 08 TrustLogin SSO 検討]]
 > - 最大の論点は**既存ユーザーの uuid が維持されるか**。権限は `auth.users.id` 基準なので、変わると superuser 権限とロール割り当てが外れる
 
 > [!success] 2026-09-17：2段階認証（TOTP）を全員に必須にした
