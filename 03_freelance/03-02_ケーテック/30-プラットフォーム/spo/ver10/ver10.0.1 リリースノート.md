@@ -14,7 +14,9 @@ updated: 2026-09-23
 元になったバックログ: [[30-プラットフォーム/spo/ver10/ver10 要望事項]]
 
 ブランチ: `feature/ver10-insurance-leave-lunch-permission-updates`(origin にpush済み・PR未作成)
-コミット: `c83cfd0`〜`98b9b31`(9件、リスト1本/機能1本単位)
+コミット: `c83cfd0`〜`1651c67`(10件、リスト1本/機能1本単位)
+
+サイト: `s-portal_ver10.0.1`(2026-09-23、実機デプロイ試行済み。下記「検証内容」参照)
 
 > [!info] このノートの役割(ver9の「変化点」ノートと同じ位置づけ)
 > **今回の実装内容とその根拠(なぜそうしたか)**、および**まだ対応できていない残課題**を記録する
@@ -119,7 +121,26 @@ updated: 2026-09-23
   — いずれも全ファイルで成功
 - 内部名(`Name`属性)に日本語が混入していないことをgrepで自己検証
 - SPFx側は`tsc --noEmit`で型チェックを実行し、`padStart`のコンパイルエラーを検出・修正
-- **実機(テナント)への適用・確認はまだ行っていない**(下記「残課題」参照)
+
+> [!bug] 実機デプロイで発覚した不具合(2026-09-23、`s-portal_ver10.0.1`サイトへの適用試行)
+> 静的検証(xmllint等)だけでは検出できなかった問題が、実際の`deploy-wizard.ps1`実行で発覚した。
+>
+> - **事象**: `scripts/seed-masters.ps1`が`Lists/DestinationMaster`へのCSV投入を試みて
+>   `Get-PnPListItem`が「リストがサイトに存在しない」例外で失敗し、終了コード1で
+>   `deploy-wizard.ps1`全体が停止した(以降のマスタ投入(EmployeeMaster等)まで巻き込まれて未実行)
+> - **原因**: No.03のDestination列をLookup→Choiceに巻き戻した際、テンプレート(XML)・
+>   `apply-order.json`・SPFxの`masterTypes.ts`からはDestinationMasterを削除したが、
+>   **`scripts/seed-masters.ps1`の`$masterDefinitions`配列への追従が漏れていた**
+>   (`scripts/configure-list-permissions.ps1`の対象リスト一覧にも同様の残骸があったが、
+>   こちらは`Test-PortalListExists`の存在チェックで警告スキップされ実害は無かった)
+> - **対応**: 両スクリプトから`DestinationMaster`関連の定義を削除し、未使用になった
+>   `config/masters/destination-master.sample.csv`も削除した(コミット`1651c67`)
+> - **教訓**: 「他リストからの参照が無いことを確認した」際のgrep対象に`scripts/`配下の
+>   PowerShellが漏れていた。マスタリスト(`10_masters/`)を削除する際は、テンプレート・
+>   `apply-order.json`・SPFxだけでなく`scripts/seed-masters.ps1`と
+>   `scripts/configure-list-permissions.ps1`の対象リスト一覧も必ず確認すること
+> - **未確認**: 修正後の再デプロイ(`deploy-wizard.ps1`の再実行)はまだ行っていない。
+>   次にデプロイを試す際、この修正で最後まで通ることを確認する必要がある
 
 ## 残課題(ヒアリング・確認が必要な項目)
 
@@ -141,9 +162,10 @@ updated: 2026-09-23
   ([[テーマ2 - 承認者をどう決めるか]]参照)は、今回のセッションでユーザー判断として
   「先方の運用責任で受け入れる」ことで決着したが、**先方にその前提を明示的に伝えたわけではない**。
   通知するかどうかは未定
-- **テナントへの適用(`provision.ps1`実行)・実機確認は未実施**。xmllint等の静的検証のみで、
-  実際にリストを作成してフォームの挙動(時刻2プルダウンの表示、履歴引き継ぎの動作等)を
-  確認したわけではない
+- **実機確認は未完了**。`s-portal_ver10.0.1`サイトへの初回デプロイ試行は上記の不具合で
+  `seed-masters.ps1`の途中まで進んで停止した。修正コミット後の**再デプロイはまだ行っていない**ため、
+  マスタ投入の完走・各フォームの実際の挙動(時刻2プルダウンの表示、履歴引き継ぎの動作、
+  渡航者詳細項目・2段階承認の入力欄等)はいずれも未確認
 - ブランチはorigin にpush済みだが、**PRはまだ作成していない**
 - CLAUDE.mdヘッダに記載の既知の負債(`docs/conventions.md`・`docs/flow-design.md`が
   `main`の中央承認エンジン前提のまま、本ブランチの簡易方式に未追従)は今回のセッションでも
