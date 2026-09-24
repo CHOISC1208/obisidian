@@ -13,7 +13,9 @@ updated: 2026-09-23
 親: [[00 MOC|ケーテック株式会社 MOC]] ／ 前版: [[30-プラットフォーム/spo/ver9/ver9 変化点]] ／
 元になったバックログ: [[30-プラットフォーム/spo/ver10/ver10 要望事項]]
 
-ブランチ: `feature/ver10-insurance-leave-lunch-permission-updates`(origin にpush済み・PR未作成)
+ブランチ: `feature/ver10-insurance-leave-lunch-permission-updates`
+PR: [k-ktec/k-tec_spo_simple#7](https://github.com/k-ktec/k-tec_spo_simple/pull/7)(マージ済み、マージコミット`cf6edbb`)
+gitタグ: `ver10.0.2`(コミット `cf6edbb`)
 コミット: `c83cfd0`〜`367b66c`(14件、リスト1本/機能1本単位)
 
 サイト: `s-portal_ver10.0.2`(2026-09-23、実機デプロイ完了。下記「検証内容」参照)
@@ -222,7 +224,9 @@ updated: 2026-09-23
   コードレビューでは論理的な不具合は見つからなかったため、SPFxパッケージ未再公開が原因の
   可能性が高いと推測していた。`s-portal_ver10.0.2`へのデプロイ(SPFxのビルド・パッケージ
   再公開を含むかは要確認)後、改めて動作確認が必要
-- ブランチはorigin にpush済みだが、**PRはまだ作成していない**
+- ~~ブランチはorigin にpush済みだが、PRはまだ作成していない~~ → **解消(2026-09-23)**。
+  [k-ktec/k-tec_spo_simple#7](https://github.com/k-ktec/k-tec_spo_simple/pull/7)を作成した。
+  レビュー・マージは未実施
 - CLAUDE.mdヘッダに記載の既知の負債(`docs/conventions.md`・`docs/flow-design.md`が
   `main`の中央承認エンジン前提のまま、本ブランチの簡易方式に未追従)は今回のセッションでも
   未着手のまま
