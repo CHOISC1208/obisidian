@@ -14,7 +14,8 @@ updated: 2026-09-24
 元になったバックログ: [[30-プラットフォーム/spo/ver10/ver10 要望事項]]
 
 ブランチ: `feature/ver10.0.3-keicho-report`
-PR: [k-ktec/k-tec_spo_simple#8](https://github.com/k-ktec/k-tec_spo_simple/pull/8)
+PR: [k-ktec/k-tec_spo_simple#8](https://github.com/k-ktec/k-tec_spo_simple/pull/8)(マージ済み、マージコミット`3a5ca28`)
+gitタグ: `ver10.0.3`(コミット `3a5ca28`)
 コミット: `333c33a`〜`400b6aa`(4件、リスト1本/機能1本単位)
 
 > [!info] このノートの役割(ver10.0.2と同じ位置づけ)
@@ -112,7 +113,7 @@ PR: [k-ktec/k-tec_spo_simple#8](https://github.com/k-ktec/k-tec_spo_simple/pull/
 - **`ChildName`(子女氏名/お子様のお名前)を結婚祝金と出産祝金で共用する設計は、実装上の判断で
   先方確認は取っていない**。同一の列に2つの異なる文脈のラベルが乗ることに違和感が無いか、
   実機で見てもらってから最終確認したほうがよい
-- ~~PR未作成~~ → **解消(2026-09-24)**。[k-ktec/k-tec_spo_simple#8](https://github.com/k-ktec/k-tec_spo_simple/pull/8)を作成した。レビュー・マージは未実施
+- ~~PR未作成~~ → **解消(2026-09-24)**。[k-ktec/k-tec_spo_simple#8](https://github.com/k-ktec/k-tec_spo_simple/pull/8)を作成・マージ済み。`ver10.0.3`タグ作成済み(コミット`3a5ca28`)
 
 ## 関連
 
