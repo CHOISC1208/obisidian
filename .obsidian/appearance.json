@@ -1,7 +1,7 @@
 {
-  "cssTheme": "Atom",
+  "cssTheme": "Wasp",
   "baseFontSize": 13,
   "translucency": false,
-  "theme": "moonstone",
+  "theme": "obsidian",
   "accentColor": "#98aec8"
 }
