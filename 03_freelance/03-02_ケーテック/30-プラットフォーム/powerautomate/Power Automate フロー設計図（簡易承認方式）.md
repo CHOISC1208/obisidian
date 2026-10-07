@@ -166,5 +166,7 @@ flowchart TD
 
 ## 関連
 
+- リスト別の設計: [[30-プラットフォーム/powerautomate/Power Automate リスト別フロー設計(簡易承認方式)]]
+
 - リポジトリ: `k-tec_spo_simple`(`CLAUDE.md`、`docs/flow-design.md`、`flows/README.md`、`flows/solution/`)
 - [[30-プラットフォーム/spo/ver8/ver8 リスト別機能一覧（ベースライン）]]
