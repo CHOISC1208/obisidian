@@ -12,7 +12,7 @@ updated: 2026-10-07
 
 # Claude(FlowAgent MCP)でのフロー生成
 
-親: [[00 MOC|ケーテック株式会社 MOC]] ／ 設計図: [[30-プラットフォーム/powerautomate/Power Automate フロー設計図（簡易承認方式）]] ／ 列名: [[30-プラットフォーム/powerautomate/リスト別 列名対応表(Power Automate用)]]
+親: [[00 MOC|ケーテック株式会社 MOC]] ／ 新しいフローの作り方: [[30-プラットフォーム/powerautomate/新しいフローを作る手順(セッションの始め方)]] ／ 設計図: [[30-プラットフォーム/powerautomate/Power Automate フロー設計図（簡易承認方式）]] ／ 列名: [[30-プラットフォーム/powerautomate/リスト別 列名対応表(Power Automate用)]]
 
 > [!info] このノートの役割
 > Power Automate のフローを **GUIで手作りする代わりに、Claude Code + FlowAgent MCP Server で生成する**ための

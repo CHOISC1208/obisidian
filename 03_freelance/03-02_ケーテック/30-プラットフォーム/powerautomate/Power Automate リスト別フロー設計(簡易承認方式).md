@@ -11,7 +11,7 @@ updated: 2026-10-07
 
 # Power Automate リスト別フロー設計(簡易承認方式)
 
-親: [[00 MOC|ケーテック株式会社 MOC]] ／ 共通方針: [[30-プラットフォーム/powerautomate/Power Automate フロー設計図（簡易承認方式）]] ／ 生成の運用: [[30-プラットフォーム/powerautomate/Claude(FlowAgent MCP)でのフロー生成]] ／ 列名: [[30-プラットフォーム/powerautomate/リスト別 列名対応表(Power Automate用)]]
+親: [[00 MOC|ケーテック株式会社 MOC]] ／ 新しいフローの作り方: [[30-プラットフォーム/powerautomate/新しいフローを作る手順(セッションの始め方)]] ／ 共通方針: [[30-プラットフォーム/powerautomate/Power Automate フロー設計図（簡易承認方式）]] ／ 生成の運用: [[30-プラットフォーム/powerautomate/Claude(FlowAgent MCP)でのフロー生成]] ／ 列名: [[30-プラットフォーム/powerautomate/リスト別 列名対応表(Power Automate用)]]
 
 > [!info] このノートの役割
 > 有効な申請リスト7本ごとのフロー設計。**共通の骨格(§2)+リスト別の差分(§3)**。
