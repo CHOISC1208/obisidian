@@ -69,7 +69,7 @@ Power Automate で各APPのフローを組むときに、列の**内部名**と*
 |---|---|---|
 | `EmployeeMasterRef` | 対象者(従業員台帳から検索) | Lookup |
 | `InitiatorType` | 起票区分 | 選択肢 |
-| `TargetEmployee` | 対象者(代理申請) | Person |
+| `TargetEmployee` | 対象者(代理申請) | Person(**ver11.0.4でフォームから削除。新規申請では空**。代理申請の対象者は `EmployeeMasterRef`) |
 | `RequestType` | 制度種別 | 選択肢 |
 | `TargetPerson` | 対象者 | 選択肢 |
 | `EmploymentType` | 雇用形態 | 選択肢 |
@@ -127,7 +127,7 @@ Power Automate で各APPのフローを組むときに、列の**内部名**と*
 | 内部名 | 使われるリスト | 備考 |
 |---|---|---|
 | `Amount` | 仮払金(仮払金額・通貨) / 昼食(金額・通貨) | 表示名がリストで違う |
-| `InitiatorType` / `TargetEmployee` | 年休・慶弔 | 起票区分=代理申請のときだけ対象者を使う |
+| `InitiatorType` / `TargetEmployee` | 年休・慶弔 | 起票区分=代理申請のときだけ対象者を使う(慶弔は ver11.0.4 から `EmployeeMasterRef`、年休は `TargetEmployee`) |
 | `TargetPerson` | 慶弔 | 「対象者(選択肢)」。`TargetEmployee`(Person)とは別物 |
 
 ## 5. 既存環境での落とし穴

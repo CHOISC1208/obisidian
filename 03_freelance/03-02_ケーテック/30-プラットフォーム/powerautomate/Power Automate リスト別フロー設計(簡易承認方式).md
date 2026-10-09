@@ -124,7 +124,7 @@ SPFx 経由でない直接登録でも二重起動しないようにする。
 | 項目 | 内容 |
 |---|---|
 | 承認 | 2段(Leader任意→Approver必須) |
-| 起票区分 | `InitiatorType=代理申請` のとき対象者は `TargetEmployee`。`Applicant` は作成者のまま(代理入力した人)とし、通知は作成者と対象者の両方へ |
+| 起票区分 | `InitiatorType=代理申請` のとき対象者は `TargetEmployee`(年休)。慶弔は ver11.0.4 から `EmployeeMasterRef`(従業員台帳のLookup)。`Applicant` は作成者のまま(代理入力した人)とし、通知は作成者と対象者の両方へ |
 | 固有処理 | なし。件名・`LeaveDays`・時刻はSPFxが設定済みのためフローは再計算しない |
 | 承認済後 | 通知のみ。20日締めの総務向けCSV/Excel出力はフロー対象外(Excel×Power Query) |
 | 留意 | 年休カレンダーの公開/非公開(要確認 §5-A)は承認フローの外 |
