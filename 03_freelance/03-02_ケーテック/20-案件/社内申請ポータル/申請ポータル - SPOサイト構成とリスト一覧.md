@@ -48,7 +48,7 @@ updated: 2026-09-05
 | 5 | `10_masters/14_business-calendar.xml` | `BusinessCalendar` | 営業日カレンダー | ✅ | 督促フローの経過日数判定用。**現状どこからも参照されていない** |
 | 6 | `10_masters/15_reminder-config.xml` | `ReminderConfig` | 督促対象設定 | ❌ | 中央承認エンジン専用。廃止済みだがファイルは残置 |
 | 7 | `10_masters/16_destination-master.xml` | `DestinationMaster` | 渡航先マスタ | ✅ | 2026-08-17 新設。表記ブレ防止のため No.3 が Lookup 参照 |
-| 8 | `20_requests/07_leave-request.xml` | `LeaveRequests` | 年休申請 | ✅ | **雛形**。最初に完成させ他へ横展開 |
+| 8 | `20_requests/07_leave-request.xml` | `LeaveRequests` | 勤怠申請(旧:年休申請。ver11.0.5で改名) | ✅ | **雛形**。最初に完成させ他へ横展開 |
 | 9 | `20_requests/01_advance-payment.xml` | `AdvancePayments` | 仮払金申請 | ✅ | |
 | 10 | `20_requests/02_keicho-report.xml` | `KeichoReports` | 慶弔連絡 | ✅ | 項目レベル権限の対象（総務人事のみ閲覧） |
 | 11 | `20_requests/03_overseas-insurance.xml` | `OverseasInsurance` | 海外保険加入依頼 | ✅ | 唯一の2段承認APP |
