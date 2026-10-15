@@ -56,6 +56,15 @@ Next.js (App Router) / React / Tailwind CSS v4 / shadcn-ui / Supabase (Postgres)
 
 （リポジトリ調査の結果をここに貼る）
 
+## 2026-10-15 の更新（v0.128.0）
+
+[[PRJ-10-店舗別受発注v2とマスタの改善（2026-10要望）]]。先方向けは [[2026-10-15 リリースノート（先方送付用）]]。
+
+- 梱包材マスタ: 検索欄、写真（Storage 公開バケット `packaging-photos`・`photo_path`）、メーカーのマスタ化（`packaging_suppliers`・`supplier_id`。旧 `supplier` 文字列は互換のため残す）
+- その他マスタ（制服・備品）: 別テーブル `other_supplies`。`/master/other-supplies`
+- チェック: セット価格チェック `/check/set-price`、`/check/order-input` の見出しを税込・税抜表記に
+- マイグレーション `20261015000000_packaging_suppliers_photos_other_supplies.sql`（追加のみ。choi-tone が読むため既存列は変えない）
+
 ## 未反映の課題
 
 （[[_課題一覧]] のうち、このプラットフォームに実装先が向いていて未着手のもの）
