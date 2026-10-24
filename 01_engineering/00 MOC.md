@@ -20,6 +20,7 @@ updated: 2026-09-16
 |---|---|
 | [[Vercel - デプロイブランチの制御]] | Production Branch・Ignored Build Step の設定 |
 | [[Vercel - Functionsのリージョン設定]] | Functionsの既定リージョン（米国）とDBのリージョンが離れていると起きる遅延、`vercel.json` での直し方 |
+| [[Webレイアウト - 用語の分類]] | single column / grid / masonry / Z-pattern / hero などを「骨格・配置スタイル・視線・型」の4軸で整理 |
 
 ## 関連
 
