@@ -52,7 +52,7 @@ https://ktec19950401.sharepoint.com/sites/s-portal_ver11.0.7
   日付のみの列(`Format="DateOnly"`)は日付型、`承認日時`・`作成日時` は日時型。
 - `DateTime.From` は日時・数値(Excelのシリアル値)・テキストのどれでも受けるので、取得時に列が型なしでも動く。
 - サイトの地域設定が日本標準時でない場合は、`#duration(0, 9, 0, 0)` の 9 を直す。
-- Lookup列と、複数値になりうる選択肢列は型を付けていない(Record / List のまま)。
+- 複数値になりうる選択肢列は型を付けていない(List のまま)。
 
 ## 4. Person列と Lookup列
 
@@ -61,8 +61,12 @@ https://ktec19950401.sharepoint.com/sites/s-portal_ver11.0.7
   複数人の列は「、」区切りにする。メールアドレスは出していない(必要なら `EMail` を取る列を足す)。
 - Record の項目名(`Title` が氏名か)は**実機で確認していない**。氏名が空(`null`)になるときは、その列を手で展開して項目名を見て、
   `人名` 関数の `"Title"` を合わせる。確認できたら本ノートに追記すること。
-- `MenuItem` / `EmployeeMasterRef` などの **Lookup列**は基本のノートでは Record のまま。マスタの中身は
-  [[30-プラットフォーム/powerquery/Power Query MOC|MOC]] の応用で結合する。
+- `MenuItem` / `EmployeeMasterRef` / `TravelerEmployeeRef` などの **Lookup列**も Record で返る想定。
+  各クエリで `参照値` 関数により、**表示値(参照列の `ShowField`)の文字列**に置き換えている
+  (`Id` を除いた Record の `Value` → `Title` → 先頭の項目、の順で取る)。
+  ShowField は `MenuItem`=メニュー名、`EmployeeMasterRef`=氏名、`TravelerEmployeeRef`=従業員番号。
+  Record の項目名は実機で未確認。名前が出ないときは、その列を手で展開して項目名を見て、`参照値` を合わせる。
+  マスタの他の列(価格・ご飯の量など)まで付けたいときは、応用([[30-プラットフォーム/powerquery/Power Query MOC|MOC]])で結合する。
 - 複数値になりうる選択肢列は List で返ることがある(型は付けていない)。
 - 申請系は共通列(`Applicant` ~ `ApprovalMessage`)をすべて含む。不要な列は `必要列` の列名リストから消す。
 - `作成日時`(`Created`)は全リストに付けてある。

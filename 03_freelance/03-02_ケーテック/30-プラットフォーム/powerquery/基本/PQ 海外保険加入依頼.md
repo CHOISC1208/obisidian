@@ -25,6 +25,12 @@ let
   人名 = (v) =>
     let 一人 = (r) => if r is record then Record.FieldOrDefault(r, "Title", Record.FieldOrDefault(r, "DisplayName", null)) else r
     in if v = null then null else if v is list then Text.Combine(List.Transform(v, 一人), "、") else 一人(v),
+  参照値 = (v) =>
+    let 一件 = (r) => if r is record
+          then (let 他 = Record.RemoveFields(r, {"Id"}, MissingField.Ignore)
+                in Record.FieldOrDefault(他, "Value", Record.FieldOrDefault(他, "Title", List.First(Record.FieldValues(他), null))))
+          else r
+    in if v = null then null else if v is list then Text.Combine(List.Transform(v, each Text.From(一件(_))), "、") else Text.From(一件(v)),
   リスト = ソース{[Title = "海外保険加入依頼"]}[Items],
   必要列 = Table.SelectColumns(リスト, {"ID","Title","Applicant","RequestDate","ApplicantDepartment","Status","Approver","ApprovedAt","ApproverComment","ApprovalMessage","TravelerName","TravelerEmployeeRef","TravelerFullName","TravelerLastNameRoman","TravelerFirstNameRoman","TravelerEmail","TravelerBirthDate","TravelerGender","Destination","TravelPurpose","DepartureDate","ReturnDate","Companions","LeaderApprover","IsRetroactive","Created"}, MissingField.UseNull),
   列名変更 = Table.RenameColumns(必要列, {
@@ -69,7 +75,10 @@ let
   // Person列(Record)を氏名の文字列にする
   人名変換 = Table.TransformColumns(日時変換, {{"申請者", 人名, type text}, {"承認者", 人名, type text}, {"渡航者(旧・Person)", 人名, type text}, {"1次承認者(リーダー)", 人名, type text}}),
 
-  型変換 = Table.TransformColumnTypes(人名変換, {{"ID", Int64.Type}, {"件名", type text}, {"所属部署", type text}, {"ステータス", type text}, {"承認コメント", type text}, {"承認メッセージ", type text}, {"渡航者氏名", type text}, {"氏名(姓)※半角ローマ字", type text}, {"氏名(名)※半角ローマ字", type text}, {"メールアドレス", type text}, {"性別", type text}, {"渡航先", type text}, {"渡航目的", type text}, {"同行者", type text}, {"事後申請(緊急時の後追い)", type logical}})
+  // 参照列(Lookup)を表示値(ShowField)の文字列にする
+  参照変換 = Table.TransformColumns(人名変換, {{"渡航者の従業員番号", 参照値, type text}}),
+
+  型変換 = Table.TransformColumnTypes(参照変換, {{"ID", Int64.Type}, {"件名", type text}, {"所属部署", type text}, {"ステータス", type text}, {"承認コメント", type text}, {"承認メッセージ", type text}, {"渡航者氏名", type text}, {"氏名(姓)※半角ローマ字", type text}, {"氏名(名)※半角ローマ字", type text}, {"メールアドレス", type text}, {"性別", type text}, {"渡航先", type text}, {"渡航目的", type text}, {"同行者", type text}, {"事後申請(緊急時の後追い)", type logical}})
 in
   型変換
 ```
@@ -77,4 +86,4 @@ in
 ## 注意
 
 - 「見つかりません」になったら `[Title = "海外保険加入依頼"]` を `[Name = "OverseasInsurance"]` に変える。
-- Person列は氏名の文字列に変換済み(下の注を参照)。Lookup列は Record のまま。
+- Person列は氏名、Lookup列は表示値の文字列に変換済み(基本方針の「Person列と Lookup列」を参照)。
