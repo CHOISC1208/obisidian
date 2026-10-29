@@ -40,22 +40,38 @@ https://ktec19950401.sharepoint.com/sites/s-portal_ver11.0.7
 サイトを切り替える(ミニテナント⇔先方、ver更新)ときは、各クエリの `SharePoint.Tables("…", …)` の URL を書き換える。
 全クエリを置換するときは、Power Query エディターの「高度なエディター」を開いて一括で直すか、旧URLを検索して置換する。
 
-## 3. 注意(Person / Lookup 列)
+## 3. 型変換と日時(2026-10-29追加)
 
-- `Applicant` / `Approver` / `LeaderApprover` などの **Person 列**、`MenuItem` / `EmployeeMasterRef` などの **Lookup 列**は、
-  Record で返る。各ノートではリネームだけして、展開(`Table.ExpandRecordColumn`)は**入れていない**。
-  展開できる項目名(`Title` / `EMail` など)は実機で確認してから足す。確認できたら本ノートに追記すること。
-- 選択肢列(複数選択)は List で返ることがある。
+各クエリの末尾で、列の型を XML の定義どおりに付ける(数値・通貨・はい/いいえ・テキスト・日付・日時)。
+
+- **日時はUTCで返る**。実データで確認: 作成日時が `03:57` なら日本時間は `12:57`。日付のみの列(支払希望日など)も
+  日本時間の0時が前日15時のUTCで入っているため、そのまま日付にすると**1日ずれる**。
+- そのため各クエリの先頭に `JST = (x) => DateTime.From(x) + #duration(0, 9, 0, 0)` を置き、+9時間してから型を付ける。
+  日付のみの列(`Format="DateOnly"`)は日付型、`承認日時`・`作成日時` は日時型。
+- `DateTime.From` は日時・数値(Excelのシリアル値)・テキストのどれでも受けるので、取得時に列が型なしでも動く。
+- サイトの地域設定が日本標準時でない場合は、`#duration(0, 9, 0, 0)` の 9 を直す。
+- Lookup列と、複数値になりうる選択肢列は型を付けていない(Record / List のまま)。
+
+## 4. Person列と Lookup列
+
+- `Applicant` / `Approver` / `LeaderApprover` などの **Person列**は Record で返る(`[Record]` と表示される)。
+  各クエリで `人名` 関数により、**氏名(Record の `Title`、無ければ `DisplayName`)の文字列**に置き換えている。
+  複数人の列は「、」区切りにする。メールアドレスは出していない(必要なら `EMail` を取る列を足す)。
+- Record の項目名(`Title` が氏名か)は**実機で確認していない**。氏名が空(`null`)になるときは、その列を手で展開して項目名を見て、
+  `人名` 関数の `"Title"` を合わせる。確認できたら本ノートに追記すること。
+- `MenuItem` / `EmployeeMasterRef` などの **Lookup列**は基本のノートでは Record のまま。マスタの中身は
+  [[30-プラットフォーム/powerquery/Power Query MOC|MOC]] の応用で結合する。
+- 複数値になりうる選択肢列は List で返ることがある(型は付けていない)。
 - 申請系は共通列(`Applicant` ~ `ApprovalMessage`)をすべて含む。不要な列は `必要列` の列名リストから消す。
 - `作成日時`(`Created`)は全リストに付けてある。
 
-## 4. 対象外
+## 5. 対象外
 
 - `督促対象設定`(`ReminderConfig`、`apply-order.json` で enabled=false)
 - `勤怠データ提出状況`(`KintaiSubmissions`、システム化取り下げ)
 - `_pending/` 配下の4リスト(No.8 / 11 / 12 / 14、enabled=false)
 
-## 5. 未確定・次にやること
+## 6. 未確定・次にやること
 
 - 慶弔マスタ以外の取得確認(列名の食い違い、`Title` でのリスト名指定が通るか)
 - Person / Lookup 列の展開項目の確認
