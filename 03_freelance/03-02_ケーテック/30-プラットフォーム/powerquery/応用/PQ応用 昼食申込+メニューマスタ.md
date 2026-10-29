@@ -35,11 +35,11 @@ let
     in if v = null then null else if v is list then Text.Combine(List.Transform(v, 一人), "、") else 一人(v),
 
   // 昼食申込
-  昼食 = Table.SelectColumns(ソース{[Title = "昼食申込"]}[Items], {"ID","Title","Applicant","RequestDate","ApplicantDepartment","Status","Approver","ApprovedAt","ApproverComment","ApprovalMessage","SubmissionMode","OrderDate","PeriodStartDate","PeriodEndDate","OrderType","DinerName","MenuItem","Quantity","CostDepartment","Amount","Created"}),
+  昼食 = Table.SelectColumns(ソース{[Title = "昼食申込"]}[Items], {"ID","Title","Applicant","RequestDate","ApplicantDepartment","Status","Approver","ApprovedAt","ApproverComment","ApprovalMessage","SubmissionMode","OrderDate","PeriodStartDate","PeriodEndDate","OrderType","DinerName","MenuItem","Quantity","CostDepartment","Amount","Created"}, MissingField.UseNull),
 
   // メニューマスタ(結合用に必要な列だけ。列名は結合後に衝突しないよう先に変える)
   メニュー = Table.RenameColumns(
-    Table.SelectColumns(ソース{[Title = "メニューマスタ"]}[Items], {"ID","Title","MealPattern","RiceSize","Price"}),
+    Table.SelectColumns(ソース{[Title = "メニューマスタ"]}[Items], {"ID","Title","MealPattern","RiceSize","Price"}, MissingField.UseNull),
     {{"ID","メニューID"},{"Title","メニュー名"},{"MealPattern","注文パターン"},{"RiceSize","ご飯の量"},{"Price","価格"}}),
 
   // MenuItem(参照列)からメニューマスタの ID を取り出す。Record で返る場合と数値で返る場合の両方に対応

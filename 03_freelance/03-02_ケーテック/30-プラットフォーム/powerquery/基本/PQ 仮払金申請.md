@@ -26,7 +26,7 @@ let
     let 一人 = (r) => if r is record then Record.FieldOrDefault(r, "Title", Record.FieldOrDefault(r, "DisplayName", null)) else r
     in if v = null then null else if v is list then Text.Combine(List.Transform(v, 一人), "、") else 一人(v),
   リスト = ソース{[Title = "仮払金申請"]}[Items],
-  必要列 = Table.SelectColumns(リスト, {"ID","Title","Applicant","RequestDate","ApplicantDepartment","Status","Approver","ApprovedAt","ApproverComment","ApprovalMessage","LeaderApprover","ExpenseCategory","Amount","Purpose","PaymentDueDate","SettlementDueDate","Created"}),
+  必要列 = Table.SelectColumns(リスト, {"ID","Title","Applicant","RequestDate","ApplicantDepartment","Status","Approver","ApprovedAt","ApproverComment","ApprovalMessage","LeaderApprover","ExpenseCategory","Amount","Purpose","PaymentDueDate","SettlementDueDate","Created"}, MissingField.UseNull),
   列名変更 = Table.RenameColumns(必要列, {
     {"ID", "ID"},
     {"Title", "件名"},

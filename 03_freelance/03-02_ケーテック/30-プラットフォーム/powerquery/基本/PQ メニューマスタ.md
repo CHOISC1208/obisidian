@@ -23,7 +23,7 @@ let
   ソース = SharePoint.Tables("https://ktec19950401.sharepoint.com/sites/s-portal_ver11.0.7", [Implementation = null, ApiVersion = 15]),
   JST = (x) => DateTime.From(x) + #duration(0, 9, 0, 0),
   リスト = ソース{[Title = "メニューマスタ"]}[Items],
-  必要列 = Table.SelectColumns(リスト, {"ID","Title","MealPattern","RiceSize","Price","IsActive","Created"}),
+  必要列 = Table.SelectColumns(リスト, {"ID","Title","MealPattern","RiceSize","Price","IsActive","Created"}, MissingField.UseNull),
   列名変更 = Table.RenameColumns(必要列, {
     {"ID", "ID"},
     {"Title", "メニュー名"},
