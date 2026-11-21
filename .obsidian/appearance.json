@@ -3,5 +3,6 @@
   "baseFontSize": 13,
   "translucency": false,
   "theme": "moonstone",
-  "accentColor": "#98aec8"
+  "accentColor": "#98aec8",
+  "showRibbon": true
 }
