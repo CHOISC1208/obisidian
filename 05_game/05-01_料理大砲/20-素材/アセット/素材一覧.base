@@ -1,0 +1,73 @@
+filters:
+  and:
+    - file.folder == this.file.folder
+    - file.ext == "md"
+properties:
+  note.id:
+    displayName: ID
+  note.kind:
+    displayName: 種別
+  note.status:
+    displayName: 状態
+  note.source:
+    displayName: 調達
+  note.filename:
+    displayName: ファイル名
+  note.license:
+    displayName: ライセンス/出典
+  note.drive:
+    displayName: 元データ
+views:
+  - type: table
+    name: 全件
+    order:
+      - note.id
+      - file.name
+      - note.kind
+      - note.status
+      - note.source
+      - note.filename
+    sort:
+      - property: note.id
+        direction: ASC
+  - type: table
+    name: 種別ごと
+    groupBy:
+      property: note.kind
+      direction: ASC
+    order:
+      - note.id
+      - file.name
+      - note.status
+      - note.source
+      - note.filename
+    sort:
+      - property: note.id
+        direction: ASC
+  - type: table
+    name: 未完了
+    filters:
+      and:
+        - note.status != "完了"
+    groupBy:
+      property: note.status
+      direction: ASC
+    order:
+      - note.id
+      - file.name
+      - note.kind
+      - note.source
+    sort:
+      - property: note.id
+        direction: ASC
+  - type: table
+    name: ライセンス未確認
+    filters:
+      and:
+        - note.license == null || note.license == ""
+        - note.source != "自作"
+    order:
+      - note.id
+      - file.name
+      - note.source
+      - note.license

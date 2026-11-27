@@ -1,0 +1,191 @@
+{
+  "nodes": [
+    {
+      "id": "pitch",
+      "type": "text",
+      "x": -200,
+      "y": -420,
+      "width": 520,
+      "height": 140,
+      "text": "# ピッチ\n大砲で食材を撃ち、積まれた食材を3球以内に崩す、考える系2D物理パズル（iPad・横画面）",
+      "color": "6"
+    },
+    {
+      "id": "who",
+      "type": "text",
+      "x": 420,
+      "y": -420,
+      "width": 360,
+      "height": 140,
+      "text": "## 誰が遊ぶか\n10歳未満の子供と大人が、会話しながら。\n寝る前に「これが終わったら寝ようね」\n文字なし・大きくざっくり操作\n大人の役割＝ヒント"
+    },
+    {
+      "id": "ref",
+      "type": "text",
+      "x": -700,
+      "y": -420,
+      "width": 420,
+      "height": 140,
+      "text": "## リファレンス（1本）\nAngry Birds（初代）\n違い：3球制・食材ごとの物理特性"
+    },
+    {
+      "id": "grp",
+      "type": "group",
+      "x": -300,
+      "y": -200,
+      "width": 720,
+      "height": 420,
+      "label": "コアループ（動詞3〜4個・30秒で1周）",
+      "color": "5"
+    },
+    {
+      "id": "v1",
+      "type": "text",
+      "x": -260,
+      "y": -140,
+      "width": 200,
+      "height": 100,
+      "text": "① 狙う\n角度と強さを決める"
+    },
+    {
+      "id": "v2",
+      "type": "text",
+      "x": 180,
+      "y": -140,
+      "width": 200,
+      "height": 100,
+      "text": "② 撃つ\n食材が飛ぶ・当たる"
+    },
+    {
+      "id": "v3",
+      "type": "text",
+      "x": 180,
+      "y": 60,
+      "width": 200,
+      "height": 100,
+      "text": "③ 崩れる\n連鎖崩壊→傾きで判定"
+    },
+    {
+      "id": "v4",
+      "type": "text",
+      "x": -260,
+      "y": 60,
+      "width": 200,
+      "height": 100,
+      "text": "④ 失敗なら即リスタート\n成功なら星評価"
+    },
+    {
+      "id": "must",
+      "type": "text",
+      "x": -700,
+      "y": 340,
+      "width": 360,
+      "height": 260,
+      "text": "## Must〔仮〕\n\n- 大砲＋着地点が分かるガイド\n- 3球制と星評価\n- 即リスタート\n- 食材3種（スイカ・卵・豆腐）\n- 1セット3ステージ\n- 文字なし・ざっくり操作\n- 強さ3段階・両手操作",
+      "color": "4"
+    },
+    {
+      "id": "wont",
+      "type": "text",
+      "x": -300,
+      "y": 340,
+      "width": 360,
+      "height": 260,
+      "text": "## Won't（今回はやらない）〔仮〕\n\n- 文字の説明\n- ヒントボタン\n- 広告・課金・オンライン\n- クラウド保存\n- 自動生成ステージ",
+      "color": "1"
+    },
+    {
+      "id": "done",
+      "type": "text",
+      "x": 100,
+      "y": 340,
+      "width": 360,
+      "height": 260,
+      "text": "## 完成の定義\n- [ ] 起動できる\n- [ ] 1回遊べる\n- [ ] 終わりがある（1セット＝3ステージ）\n- [ ] 公開されている（TestFlight）\n\n無限に遊べる仕組みは〔未確定〕"
+    },
+    {
+      "id": "pub",
+      "type": "text",
+      "x": 500,
+      "y": 340,
+      "width": 300,
+      "height": 260,
+      "text": "## 公開先と締切\n公開先：まず TestFlight（少人数）\n締切：〔未確定〕",
+      "color": "3"
+    }
+  ],
+  "edges": [
+    {
+      "id": "l1",
+      "fromNode": "v1",
+      "toNode": "v2",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "l2",
+      "fromNode": "v2",
+      "toNode": "v3",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "l3",
+      "fromNode": "v3",
+      "toNode": "v4",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "l4",
+      "fromNode": "v4",
+      "toNode": "v1",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "p1",
+      "fromNode": "pitch",
+      "toNode": "grp",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "p2",
+      "fromNode": "ref",
+      "toNode": "grp",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "label": "参考"
+    },
+    {
+      "id": "p3",
+      "fromNode": "who",
+      "toNode": "grp",
+      "fromSide": "bottom",
+      "toSide": "right",
+      "label": "遊ぶ人"
+    },
+    {
+      "id": "m1",
+      "fromNode": "grp",
+      "toNode": "must",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "m2",
+      "fromNode": "grp",
+      "toNode": "wont",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "m3",
+      "fromNode": "grp",
+      "toNode": "done",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ]
+}
