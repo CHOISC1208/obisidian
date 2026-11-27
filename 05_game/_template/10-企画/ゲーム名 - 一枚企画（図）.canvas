@@ -1,0 +1,191 @@
+{
+  "nodes": [
+    {
+      "id": "pitch",
+      "type": "text",
+      "x": -200,
+      "y": -420,
+      "width": 520,
+      "height": 140,
+      "text": "# ピッチ\n「〇〇な人が△△するゲーム」\n（一行で）",
+      "color": "6"
+    },
+    {
+      "id": "who",
+      "type": "text",
+      "x": 420,
+      "y": -420,
+      "width": 360,
+      "height": 140,
+      "text": "## 誰が遊ぶか\n「〇〇が好きな人」\n（1文）"
+    },
+    {
+      "id": "ref",
+      "type": "text",
+      "x": -700,
+      "y": -420,
+      "width": 420,
+      "height": 140,
+      "text": "## リファレンス（1本）\nゲーム名：\nそのコアループ（自分の言葉で）："
+    },
+    {
+      "id": "grp",
+      "type": "group",
+      "x": -300,
+      "y": -200,
+      "width": 720,
+      "height": 420,
+      "label": "コアループ（動詞3〜4個・30秒で1周）",
+      "color": "5"
+    },
+    {
+      "id": "v1",
+      "type": "text",
+      "x": -260,
+      "y": -140,
+      "width": 200,
+      "height": 100,
+      "text": "① 行動\n（例：避ける）"
+    },
+    {
+      "id": "v2",
+      "type": "text",
+      "x": 180,
+      "y": -140,
+      "width": 200,
+      "height": 100,
+      "text": "② 結果\n（例：集める）"
+    },
+    {
+      "id": "v3",
+      "type": "text",
+      "x": 180,
+      "y": 60,
+      "width": 200,
+      "height": 100,
+      "text": "③ 報酬\n（例：強化する）"
+    },
+    {
+      "id": "v4",
+      "type": "text",
+      "x": -260,
+      "y": 60,
+      "width": 200,
+      "height": 100,
+      "text": "④ もう一回\nやりたくなる理由"
+    },
+    {
+      "id": "must",
+      "type": "text",
+      "x": -700,
+      "y": 340,
+      "width": 360,
+      "height": 260,
+      "text": "## Must\nこれがないと成立しない\n\n- \n- \n- ",
+      "color": "4"
+    },
+    {
+      "id": "wont",
+      "type": "text",
+      "x": -300,
+      "y": 340,
+      "width": 360,
+      "height": 260,
+      "text": "## Won't（今回はやらない）\n**先にここを埋める**\n\n- \n- \n- ",
+      "color": "1"
+    },
+    {
+      "id": "done",
+      "type": "text",
+      "x": 100,
+      "y": 340,
+      "width": 360,
+      "height": 260,
+      "text": "## 完成の定義\n- [ ] 起動できる\n- [ ] 1回遊べる\n- [ ] 終わりがある\n- [ ] 公開されている"
+    },
+    {
+      "id": "pub",
+      "type": "text",
+      "x": 500,
+      "y": 340,
+      "width": 300,
+      "height": 260,
+      "text": "## 公開先と締切\n公開先：\n締切：",
+      "color": "3"
+    }
+  ],
+  "edges": [
+    {
+      "id": "l1",
+      "fromNode": "v1",
+      "toNode": "v2",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "l2",
+      "fromNode": "v2",
+      "toNode": "v3",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "l3",
+      "fromNode": "v3",
+      "toNode": "v4",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "l4",
+      "fromNode": "v4",
+      "toNode": "v1",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "p1",
+      "fromNode": "pitch",
+      "toNode": "grp",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "p2",
+      "fromNode": "ref",
+      "toNode": "grp",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "label": "参考"
+    },
+    {
+      "id": "p3",
+      "fromNode": "who",
+      "toNode": "grp",
+      "fromSide": "bottom",
+      "toSide": "right",
+      "label": "遊ぶ人"
+    },
+    {
+      "id": "m1",
+      "fromNode": "grp",
+      "toNode": "must",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "m2",
+      "fromNode": "grp",
+      "toNode": "wont",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "m3",
+      "fromNode": "grp",
+      "toNode": "done",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ]
+}
